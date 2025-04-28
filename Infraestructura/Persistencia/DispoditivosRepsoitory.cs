@@ -1,15 +1,14 @@
-﻿using Entity;
+﻿using DocumentFormat.OpenXml.Office2010.Excel;
+using Entity;
+using Microsoft.EntityFrameworkCore;
 using NEWCODES.Aplicacion.Presistencia;
 
 namespace NEWCODES.Infraestructura.Persistencia
 {
     public class DispoditivosRepsoitory : IDispoitivoRepository
     {
-        private readonly EevntoContext _context;
-        public DispoditivosRepsoitory(EevntoContext context)
-        {
-            _context = context;
-        }
+        EevntoContext _context = new EevntoContext();
+  
 
         public bool Delete(string id)
         {
@@ -25,18 +24,31 @@ namespace NEWCODES.Infraestructura.Persistencia
 
         public Dispositivos Get(string id)
         {
-            var dispo = _context.Dispositivos.Find(Convert.ToInt32(id));
+            var dispo = _context.Dispositivos.AsNoTracking().First();
+            return dispo;
+        }
+        public Dispositivos GetUnic(string id, int evento)
+        {
+            var dispo = _context.Dispositivos.AsNoTracking().Where(x => x.EventoID == evento && x.IDequipo == id).FirstOrDefault();
             return dispo;
         }
 
+
         public List<Dispositivos> Get()
         {
+
             throw new NotImplementedException();
         }
-
-        public Dispositivos Insert(Dispositivos item)
+        public List<Dispositivos> Getlist(int id)
         {
-           _context.Dispositivos.Add(item);
+            return _context.Dispositivos.AsNoTracking().Where(x=>x.EventoID.Equals(id)).ToList();
+
+        }
+
+        public Dispositivos Insert(Dispositivos item,int id)
+        {
+                           
+            _context.Dispositivos.Add(item);
            _context.SaveChanges();
             return item;
 
@@ -49,6 +61,13 @@ namespace NEWCODES.Infraestructura.Persistencia
         }
 
         public bool Update(Dispositivos item)
+        {
+            _context.Dispositivos.Update(item);
+            _context.SaveChanges(true);
+            return true;
+        }
+
+        public bool InsertLogs(Dispositivos item)
         {
             throw new NotImplementedException();
         }

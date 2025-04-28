@@ -31,7 +31,10 @@ namespace NEWCODES.Infraestructura.Persistencia
 
         public Eventos Get(string id)
         {
-            throw new NotImplementedException();
+            var even = _dbContext.Set<Eventos>().AsNoTracking().SingleOrDefault(x => x.Id.Equals(Convert.ToInt32(id)));
+            
+             return even;
+            
         }
 
         public List<Eventos> Get()
@@ -52,7 +55,12 @@ namespace NEWCODES.Infraestructura.Persistencia
            
         }
 
-        public Eventos Insert(Eventos item)
+        public Eventos Insert(Eventos item, int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool InsertLogs(Eventos item)
         {
             throw new NotImplementedException();
         }

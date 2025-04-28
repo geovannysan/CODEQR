@@ -1,3 +1,5 @@
+using NEWCODES.Infraestructura;
+
 namespace NEWCODES
 {
     internal static class Program
@@ -9,6 +11,11 @@ namespace NEWCODES
         static void Main()
         {
             // To customize application configuration such as set high DPI settings or default font,
+            using (var context = new EevntoContext())
+            {
+                context.Database.EnsureCreated(); // O context.Database.EnsureCreated();
+            }
+
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
             Application.EnableVisualStyles();

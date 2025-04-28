@@ -120,6 +120,7 @@
             Controls.Add(dateTimePicker1);
             Controls.Add(textBox1);
             Controls.Add(label1);
+            FormBorderStyle = FormBorderStyle.FixedSingle;
             Name = "Eventosform";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Nuevo Evento";

@@ -86,6 +86,7 @@
             Controls.Add(button2);
             Controls.Add(groupBox1);
             Controls.Add(button1);
+            FormBorderStyle = FormBorderStyle.FixedSingle;
             Name = "Codigos";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Codigos";

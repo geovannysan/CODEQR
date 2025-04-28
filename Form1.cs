@@ -65,8 +65,8 @@ namespace NEWCODES
         }
         public void LoadData()
         {
-            EventosRepository studentManager = new EventosRepository();
-            var students = studentManager.GetAll();
+            EventosRepository evento = new EventosRepository();
+            var students = evento.GetAll();
             dataGridView1.Rows.Clear();
             Console.WriteLine(students);
             foreach (var student in students)
@@ -117,7 +117,7 @@ namespace NEWCODES
                 {
                     var id = dataGridView1.Rows[e.RowIndex].Cells["Id"].Value?.ToString();
                     CodigosRepository codigosRepository = new CodigosRepository();
-
+                    Console.Write(id);
                     var codigos = codigosRepository.Get(id);
                     Console.WriteLine(codigos);
                     if(codigos != null)

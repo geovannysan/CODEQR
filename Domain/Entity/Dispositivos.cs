@@ -7,7 +7,7 @@ namespace Entity
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int id { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
         public string IDequipo { get; set; }
         public string Ip { get; set; } = "";

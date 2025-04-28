@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>NEWCODES</id>
+    <version>1.0.0</version>
+    <authors>NEWCODES</authors>
+    <description>Package Description</description>
+    <repository type="git" commit="bdede05996e9a88a8091f5b0b31a082d933cf160" />
+    <dependencies>
+      <group targetFramework="net8.0-windows7.0">
+        <dependency id="DocumentFormat.OpenXml" version="3.3.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.EntityFrameworkCore" version="8.0.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.EntityFrameworkCore.Sqlite" version="8.0.0" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+    <frameworkReferences>
+      <group targetFramework="net8.0-windows7.0">
+        <frameworkReference name="Microsoft.WindowsDesktop.App.WindowsForms" />
+      </group>
+    </frameworkReferences>
+  </metadata>
+  <files>
+    <file src="D:\NET\NEWCODES\NEWCODES\bin\Release\net8.0-windows\NEWCODES.runtimeconfig.json" target="lib\net8.0-windows7.0\NEWCODES.runtimeconfig.json" />
+    <file src="D:\NET\NEWCODES\NEWCODES\bin\Release\net8.0-windows\NEWCODES.dll" target="lib\net8.0-windows7.0\NEWCODES.dll" />
+  </files>
+</package>

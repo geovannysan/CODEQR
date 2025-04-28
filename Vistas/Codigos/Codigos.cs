@@ -115,7 +115,7 @@ namespace NEWCODES.Vistas.Codigos
                     EventoID = _ID
                 };
 
-                repo.Insert(info);
+                repo.Insert(info,0);
             }
                 var lista = repo.Get();
             EventosIDServer eventosIDServer = new EventosIDServer(_ID);

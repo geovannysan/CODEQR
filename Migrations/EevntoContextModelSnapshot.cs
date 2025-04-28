@@ -27,6 +27,10 @@ namespace NEWCODES.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Estado")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("EventoID")
                         .HasColumnType("INTEGER");
 
@@ -40,6 +44,9 @@ namespace NEWCODES.Migrations
 
                     b.Property<string>("info")
                         .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("time")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -61,9 +68,6 @@ namespace NEWCODES.Migrations
                     b.Property<int>("LocalidadID")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("LocalidadesId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -72,14 +76,14 @@ namespace NEWCODES.Migrations
 
                     b.HasIndex("DispoId");
 
-                    b.HasIndex("LocalidadesId");
+                    b.HasIndex("LocalidadID");
 
                     b.ToTable("DispositivoLocation");
                 });
 
             modelBuilder.Entity("Entity.Dispositivos", b =>
                 {
-                    b.Property<int>("id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
@@ -102,7 +106,7 @@ namespace NEWCODES.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.HasKey("id");
+                    b.HasKey("Id");
 
                     b.HasIndex("EventoID");
 
@@ -158,6 +162,41 @@ namespace NEWCODES.Migrations
                     b.ToTable("Localidades");
                 });
 
+            modelBuilder.Entity("NEWCODES.Domain.Entity.LogsEventos", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Codigo")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Estado")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("IdEvento")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Mensaje")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Tipo")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("time")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IdEvento");
+
+                    b.ToTable("LogsEventos");
+                });
+
             modelBuilder.Entity("Entity.Codigos", b =>
                 {
                     b.HasOne("Entity.Eventos", "Eventos")
@@ -179,7 +218,7 @@ namespace NEWCODES.Migrations
 
                     b.HasOne("Entity.Localidades", "Localidades")
                         .WithMany()
-                        .HasForeignKey("LocalidadesId")
+                        .HasForeignKey("LocalidadID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -200,6 +239,17 @@ namespace NEWCODES.Migrations
                 });
 
             modelBuilder.Entity("Entity.Localidades", b =>
+                {
+                    b.HasOne("Entity.Eventos", "Eventos")
+                        .WithMany()
+                        .HasForeignKey("IdEvento")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Eventos");
+                });
+
+            modelBuilder.Entity("NEWCODES.Domain.Entity.LogsEventos", b =>
                 {
                     b.HasOne("Entity.Eventos", "Eventos")
                         .WithMany()

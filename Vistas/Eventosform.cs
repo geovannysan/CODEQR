@@ -62,16 +62,7 @@ namespace NEWCODES.Vistas
                 {
                     Console.WriteLine(ex.ToString());
                 }
-
-
-
-                //  this.ClearForm();
-                // dgv_UserDetails.DataSource = context.UserDetails.ToList();
             }
-            //  var registra = _eventRepsoitory.Insert(evento);
-            //   MessageBox.Show($"{registra.Nombre} {registra.Id} ");
-            // Form form = new Form1();
-           // form.ShowDialog();
             Close();
 
         }

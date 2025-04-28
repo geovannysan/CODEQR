@@ -11,10 +11,10 @@ namespace Aplicacion.Persistencia
        T Get(string id);
        List<T> Get();
 
-       T Insert(T item);
+       T Insert(T item,int id=0);
        bool Update(T item);
        bool Delete(string id);
-       
+       bool InsertLogs(T item);
 
     }
 }

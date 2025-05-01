@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EventosIDServer));
             button1 = new Button();
             puertoTxt = new TextBox();
             label1 = new Label();
@@ -53,6 +54,7 @@
             Column3 = new DataGridViewTextBoxColumn();
             tabPage3 = new TabPage();
             splitContainer2 = new SplitContainer();
+            button2 = new Button();
             datagridLocalidad = new DataGridView();
             Column4 = new DataGridViewTextBoxColumn();
             Column5 = new DataGridViewTextBoxColumn();
@@ -68,6 +70,7 @@
             label3 = new Label();
             label2 = new Label();
             groupBox1 = new GroupBox();
+            pictureBox1 = new PictureBox();
             ipserver = new Label();
             txtEvento = new Label();
             Server = new Label();
@@ -87,6 +90,7 @@
             ((System.ComponentModel.ISupportInitialize)datagridLocalidad).BeginInit();
             ((System.ComponentModel.ISupportInitialize)datagridcoidgos).BeginInit();
             groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
             // button1
@@ -119,7 +123,7 @@
             // txtLog
             // 
             txtLog.BackColor = SystemColors.ButtonHighlight;
-            txtLog.Location = new Point(16, 346);
+            txtLog.Location = new Point(13, 422);
             txtLog.Multiline = true;
             txtLog.Name = "txtLog";
             txtLog.ReadOnly = true;
@@ -132,7 +136,7 @@
             Dispositivos.Controls.Add(tabPage2);
             Dispositivos.Controls.Add(tabPage3);
             Dispositivos.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            Dispositivos.Location = new Point(12, 112);
+            Dispositivos.Location = new Point(12, 179);
             Dispositivos.Name = "Dispositivos";
             Dispositivos.SelectedIndex = 0;
             Dispositivos.Size = new Size(604, 213);
@@ -348,6 +352,7 @@
             // 
             // splitContainer2.Panel1
             // 
+            splitContainer2.Panel1.Controls.Add(button2);
             splitContainer2.Panel1.Controls.Add(datagridLocalidad);
             // 
             // splitContainer2.Panel2
@@ -358,16 +363,25 @@
             splitContainer2.SplitterDistance = 283;
             splitContainer2.TabIndex = 0;
             // 
+            // button2
+            // 
+            button2.Location = new Point(3, 5);
+            button2.Name = "button2";
+            button2.Size = new Size(277, 23);
+            button2.TabIndex = 8;
+            button2.Text = "Ageregar Códigos";
+            button2.UseVisualStyleBackColor = true;
+            // 
             // datagridLocalidad
             // 
             datagridLocalidad.AllowUserToAddRows = false;
             datagridLocalidad.AllowUserToDeleteRows = false;
             datagridLocalidad.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             datagridLocalidad.Columns.AddRange(new DataGridViewColumn[] { Column4, Column5 });
-            datagridLocalidad.Location = new Point(0, 0);
+            datagridLocalidad.Location = new Point(0, 34);
             datagridLocalidad.Name = "datagridLocalidad";
             datagridLocalidad.ReadOnly = true;
-            datagridLocalidad.Size = new Size(283, 179);
+            datagridLocalidad.Size = new Size(283, 145);
             datagridLocalidad.TabIndex = 0;
             // 
             // Column4
@@ -493,7 +507,7 @@
             // 
             label2.AutoSize = true;
             label2.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            label2.Location = new Point(12, 328);
+            label2.Location = new Point(12, 395);
             label2.Name = "label2";
             label2.Size = new Size(98, 15);
             label2.TabIndex = 5;
@@ -501,6 +515,7 @@
             // 
             // groupBox1
             // 
+            groupBox1.Controls.Add(pictureBox1);
             groupBox1.Controls.Add(ipserver);
             groupBox1.Controls.Add(txtEvento);
             groupBox1.Controls.Add(Server);
@@ -509,13 +524,25 @@
             groupBox1.Controls.Add(puertoTxt);
             groupBox1.Controls.Add(label1);
             groupBox1.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            groupBox1.Location = new Point(16, 12);
+            groupBox1.Location = new Point(16, 79);
             groupBox1.Name = "groupBox1";
             groupBox1.Size = new Size(596, 94);
             groupBox1.TabIndex = 6;
             groupBox1.TabStop = false;
             groupBox1.Text = "Server";
             groupBox1.Enter += groupBox1_Enter;
+            // 
+            // pictureBox1
+            // 
+            pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
+            pictureBox1.Location = new Point(455, 47);
+            pictureBox1.Name = "pictureBox1";
+            pictureBox1.Size = new Size(32, 31);
+            pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
+            pictureBox1.TabIndex = 8;
+            pictureBox1.TabStop = false;
+            pictureBox1.Visible = false;
+            pictureBox1.Click += pictureBox1_Click;
             // 
             // ipserver
             // 
@@ -530,9 +557,8 @@
             txtEvento.AutoSize = true;
             txtEvento.Location = new Point(106, 26);
             txtEvento.Name = "txtEvento";
-            txtEvento.Size = new Size(59, 15);
+            txtEvento.Size = new Size(0, 15);
             txtEvento.TabIndex = 5;
-            txtEvento.Text = "# Evento:";
             // 
             // Server
             // 
@@ -556,7 +582,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(623, 433);
+            ClientSize = new Size(623, 508);
             Controls.Add(groupBox1);
             Controls.Add(label2);
             Controls.Add(Dispositivos);
@@ -582,6 +608,7 @@
             ((System.ComponentModel.ISupportInitialize)datagridcoidgos).EndInit();
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -632,5 +659,7 @@
         private DataGridViewTextBoxColumn Column3;
         private Label txtRepetidos;
         private Label label12;
+        private Button button2;
+        private PictureBox pictureBox1;
     }
 }

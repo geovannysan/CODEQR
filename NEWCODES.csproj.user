@@ -10,6 +10,9 @@
     <Compile Update="Vistas\Codigos\Codigos.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="Vistas\Codigos\Qrcode.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Vistas\Componetes\FormAprobacion.cs">
       <SubType>Form</SubType>
     </Compile>

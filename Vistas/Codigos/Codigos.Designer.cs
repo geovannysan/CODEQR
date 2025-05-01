@@ -39,7 +39,7 @@
             // button1
             // 
             button1.BackColor = Color.MediumSeaGreen;
-            button1.Location = new Point(22, 12);
+            button1.Location = new Point(15, 77);
             button1.Name = "button1";
             button1.Size = new Size(322, 35);
             button1.TabIndex = 0;
@@ -55,22 +55,22 @@
             dataGridView1.Dock = DockStyle.Fill;
             dataGridView1.Location = new Point(3, 19);
             dataGridView1.Name = "dataGridView1";
-            dataGridView1.Size = new Size(812, 402);
+            dataGridView1.Size = new Size(812, 356);
             dataGridView1.TabIndex = 1;
             // 
             // groupBox1
             // 
             groupBox1.Controls.Add(dataGridView1);
-            groupBox1.Location = new Point(12, 53);
+            groupBox1.Location = new Point(15, 127);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(818, 424);
+            groupBox1.Size = new Size(818, 378);
             groupBox1.TabIndex = 2;
             groupBox1.TabStop = false;
             // 
             // button2
             // 
             button2.BackColor = Color.DeepSkyBlue;
-            button2.Location = new Point(498, 12);
+            button2.Location = new Point(498, 77);
             button2.Name = "button2";
             button2.Size = new Size(332, 35);
             button2.TabIndex = 3;
@@ -82,7 +82,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(842, 489);
+            ClientSize = new Size(849, 524);
             Controls.Add(button2);
             Controls.Add(groupBox1);
             Controls.Add(button1);

@@ -36,8 +36,12 @@
             Desciption = new DataGridViewTextBoxColumn();
             Fecha = new DataGridViewTextBoxColumn();
             Estado = new DataGridViewTextBoxColumn();
+            button3 = new Button();
+            button2 = new Button();
+            materialCard1 = new MaterialSkin.Controls.MaterialCard();
             groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
+            materialCard1.SuspendLayout();
             SuspendLayout();
             // 
             // button1
@@ -53,10 +57,12 @@
             // groupBox1
             // 
             groupBox1.Controls.Add(dataGridView1);
+            groupBox1.Controls.Add(button3);
+            groupBox1.Controls.Add(button2);
             groupBox1.Controls.Add(button1);
-            groupBox1.Location = new Point(12, 48);
+            groupBox1.Location = new Point(17, 74);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(776, 401);
+            groupBox1.Size = new Size(783, 415);
             groupBox1.TabIndex = 2;
             groupBox1.TabStop = false;
             groupBox1.Text = "Eventos";
@@ -104,12 +110,48 @@
             Estado.HeaderText = "Permisos";
             Estado.Name = "Estado";
             // 
+            // button3
+            // 
+            button3.Location = new Point(346, 22);
+            button3.Name = "button3";
+            button3.Size = new Size(75, 23);
+            button3.TabIndex = 3;
+            button3.Text = "Importar";
+            button3.UseVisualStyleBackColor = true;
+            button3.Click += button3_Click;
+            // 
+            // button2
+            // 
+            button2.Location = new Point(73, 26);
+            button2.Name = "button2";
+            button2.Size = new Size(75, 23);
+            button2.TabIndex = 2;
+            button2.Text = "Exportar";
+            button2.UseVisualStyleBackColor = true;
+            button2.Click += button2_Click;
+            // 
+            // materialCard1
+            // 
+            materialCard1.BackColor = Color.FromArgb(255, 255, 255);
+            materialCard1.Controls.Add(groupBox1);
+            materialCard1.Depth = 0;
+            materialCard1.Dock = DockStyle.Fill;
+            materialCard1.ForeColor = Color.FromArgb(222, 0, 0, 0);
+            materialCard1.Location = new Point(3, 64);
+            materialCard1.Margin = new Padding(14);
+            materialCard1.MouseState = MaterialSkin.MouseState.HOVER;
+            materialCard1.Name = "materialCard1";
+            materialCard1.Padding = new Padding(14);
+            materialCard1.Size = new Size(818, 509);
+            materialCard1.TabIndex = 3;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 466);
-            Controls.Add(groupBox1);
+            AutoSize = true;
+            ClientSize = new Size(824, 576);
+            Controls.Add(materialCard1);
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Name = "Form1";
             StartPosition = FormStartPosition.CenterScreen;
@@ -117,6 +159,7 @@
             Load += Form1_Load;
             groupBox1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
+            materialCard1.ResumeLayout(false);
             ResumeLayout(false);
         }
 
@@ -130,5 +173,8 @@
         private DataGridViewTextBoxColumn Desciption;
         private DataGridViewTextBoxColumn Fecha;
         private DataGridViewTextBoxColumn Estado;
+        private Button button3;
+        private Button button2;
+        private MaterialSkin.Controls.MaterialCard materialCard1;
     }
 }

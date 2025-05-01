@@ -34,14 +34,14 @@
             label2 = new Label();
             label3 = new Label();
             textBox2 = new TextBox();
-            button1 = new Button();
             checkBox1 = new CheckBox();
+            materialButton1 = new MaterialSkin.Controls.MaterialButton();
             SuspendLayout();
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(17, 51);
+            label1.Location = new Point(28, 100);
             label1.Name = "label1";
             label1.Size = new Size(43, 15);
             label1.TabIndex = 0;
@@ -49,14 +49,14 @@
             // 
             // textBox1
             // 
-            textBox1.Location = new Point(12, 69);
+            textBox1.Location = new Point(23, 118);
             textBox1.Name = "textBox1";
             textBox1.Size = new Size(128, 23);
             textBox1.TabIndex = 1;
             // 
             // dateTimePicker1
             // 
-            dateTimePicker1.Location = new Point(165, 69);
+            dateTimePicker1.Location = new Point(176, 118);
             dateTimePicker1.Name = "dateTimePicker1";
             dateTimePicker1.Size = new Size(200, 23);
             dateTimePicker1.TabIndex = 2;
@@ -64,7 +64,7 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(177, 51);
+            label2.Location = new Point(188, 100);
             label2.Name = "label2";
             label2.Size = new Size(38, 15);
             label2.TabIndex = 3;
@@ -73,7 +73,7 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(17, 118);
+            label3.Location = new Point(28, 167);
             label3.Name = "label3";
             label3.Size = new Size(67, 15);
             label3.TabIndex = 4;
@@ -81,39 +81,49 @@
             // 
             // textBox2
             // 
-            textBox2.Location = new Point(12, 157);
+            textBox2.Location = new Point(23, 206);
             textBox2.Multiline = true;
             textBox2.Name = "textBox2";
             textBox2.Size = new Size(353, 139);
             textBox2.TabIndex = 5;
             // 
-            // button1
-            // 
-            button1.Location = new Point(126, 313);
-            button1.Name = "button1";
-            button1.Size = new Size(110, 31);
-            button1.TabIndex = 6;
-            button1.Text = "Guardar";
-            button1.UseVisualStyleBackColor = true;
-            button1.Click += button1_Click;
-            // 
             // checkBox1
             // 
             checkBox1.AutoSize = true;
-            checkBox1.Location = new Point(288, 118);
+            checkBox1.Location = new Point(299, 167);
             checkBox1.Name = "checkBox1";
             checkBox1.Size = new Size(77, 19);
             checkBox1.TabIndex = 7;
             checkBox1.Text = "Autorizar ";
             checkBox1.UseVisualStyleBackColor = true;
             // 
+            // materialButton1
+            // 
+            materialButton1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            materialButton1.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
+            materialButton1.Depth = 0;
+            materialButton1.HighEmphasis = true;
+            materialButton1.Icon = null;
+            materialButton1.Location = new Point(149, 359);
+            materialButton1.Margin = new Padding(4, 6, 4, 6);
+            materialButton1.MouseState = MaterialSkin.MouseState.HOVER;
+            materialButton1.Name = "materialButton1";
+            materialButton1.NoAccentTextColor = Color.Empty;
+            materialButton1.Size = new Size(88, 36);
+            materialButton1.TabIndex = 8;
+            materialButton1.Text = "GUARDAR";
+            materialButton1.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
+            materialButton1.UseAccentColor = false;
+            materialButton1.UseVisualStyleBackColor = true;
+            materialButton1.Click += materialButton1_Click;
+            // 
             // Eventosform
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(377, 373);
+            ClientSize = new Size(399, 415);
+            Controls.Add(materialButton1);
             Controls.Add(checkBox1);
-            Controls.Add(button1);
             Controls.Add(textBox2);
             Controls.Add(label3);
             Controls.Add(label2);
@@ -137,7 +147,7 @@
         private Label label2;
         private Label label3;
         private TextBox textBox2;
-        private Button button1;
         private CheckBox checkBox1;
+        private MaterialSkin.Controls.MaterialButton materialButton1;
     }
 }

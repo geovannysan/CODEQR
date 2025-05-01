@@ -1,18 +1,29 @@
-using Microsoft.EntityFrameworkCore;
-using NEWCODES.Infraestructura;
+ï»¿using MaterialSkin;
+using MaterialSkin.Controls;
 using NEWCODES.Infraestructura.Persistencia;
 using NEWCODES.Vistas;
 using NEWCODES.Vistas.Codigos;
 
 namespace NEWCODES
 {
-    public partial class Form1 : Form
+    public partial class Form1 : MaterialForm
     {
-
+        private MaterialSkinManager materialSkinManager;
         public Form1()
         {
             InitializeComponent();
+           // this.FormBorderStyle = FormBorderStyle.FixedSingle;
+            this.FormBorderStyle = FormBorderStyle.FixedDialog;
+
             this.MaximizeBox = false;
+            materialSkinManager = MaterialSkinManager.Instance;
+            // materialSkinManager.AddFormToManage(this);
+            materialSkinManager.Theme = MaterialSkinManager.Themes.LIGHT;
+            materialSkinManager.ColorScheme = new ColorScheme(
+                Primary.Blue600, Primary.Blue700,
+                Primary.Blue200, Accent.LightBlue200,
+                TextShade.WHITE
+            );
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -43,7 +54,7 @@ namespace NEWCODES
                     btnEliminar.Text = "Eliminar";
                     btnEliminar.UseColumnTextForButtonValue = true;
 
-                   
+
                     DataGridViewButtonColumn btnEliminarIniciar = new DataGridViewButtonColumn();
                     btnEliminarIniciar.Name = "Accion";
                     btnEliminarIniciar.HeaderText = "Accion";
@@ -75,7 +86,7 @@ namespace NEWCODES
                 dataGridView1.Rows.Add(student.Id, student.Nombre, student.Description, student.Fecha, estado);
             }
         }
-        
+
 
         private void groupBox1_Enter(object sender, EventArgs e)
         {
@@ -92,18 +103,18 @@ namespace NEWCODES
                 {
                     // Obtener el ID de la fila
                     var id = dataGridView1.Rows[e.RowIndex].Cells["Id"].Value?.ToString();
-                   // MessageBox.Show($"Eliminar fila con ID: {id}");
-                    DialogResult result = MessageBox.Show( "¿Estás seguro que deseas eliminar este registro?","Confirmar",MessageBoxButtons.OKCancel,MessageBoxIcon.Warning);
+                    // MessageBox.Show($"Eliminar fila con ID: {id}");
+                    DialogResult result = MessageBox.Show("Â¿EstÃ¡s seguro que deseas eliminar este registro?", "Confirmar", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
 
                     if (result == DialogResult.OK)
                     {
                         EventosRepository studentManager = new EventosRepository();
                         var students = studentManager.Delete(id);
                         LoadData();
-                        // Usuario confirmó
+                        // Usuario confirmÃ³
                         MessageBox.Show("Registro eliminado.");
                     }
-                    // Aquí podés llamar a tu repositorio para eliminar y luego refrescar:
+                    // AquÃ­ podÃ©s llamar a tu repositorio para eliminar y luego refrescar:
                     // EventosRepository.DeleteById(id);
                     // LoadData();
                 }
@@ -111,7 +122,7 @@ namespace NEWCODES
                 {
                     var id = dataGridView1.Rows[e.RowIndex].Cells["Id"].Value?.ToString();
                     MessageBox.Show($"Editar fila con ID: {id}");
-                    // Abrí un formulario para editar o lo que necesites
+                    // AbrÃ­ un formulario para editar o lo que necesites
                 }
                 else if (column.Name == "Accion")
                 {
@@ -120,7 +131,7 @@ namespace NEWCODES
                     Console.Write(id);
                     var codigos = codigosRepository.Get(id);
                     Console.WriteLine(codigos);
-                    if(codigos != null)
+                    if (codigos != null)
                     {
                         EventosIDServer codigos1 = new EventosIDServer(Convert.ToInt32(id));
                         codigos1.ShowDialog();
@@ -132,22 +143,80 @@ namespace NEWCODES
                     }
 
                     //MessageBox.Show($"Eliminar fila con ID: {id}");
-                    // Abrí un formulario para editar o lo que necesites
+                    // AbrÃ­ un formulario para editar o lo que necesites
                 }
             }
         }
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
-            // Cancelar el cierre si querés evitarlo (por ejemplo, desactivar la X)
+            // Cancelar el cierre si querÃ©s evitarlo (por ejemplo, desactivar la X)
             e.Cancel = true;
-            DialogResult result = MessageBox.Show("¿Estás seguro que deseas cerrar el Programa?", "INFO", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
+            DialogResult result = MessageBox.Show("Â¿EstÃ¡s seguro que deseas cerrar el Programa?", "INFO", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
 
             if (result == DialogResult.OK)
             {
-               e.Cancel=false;
-                
+                e.Cancel = false;
+
+            }
+        }
+        string dbPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "CodeEvente.db");
+        private void button2_Click(object sender, EventArgs e)
+        {
+            using (SaveFileDialog saveFileDialog = new SaveFileDialog())
+            {
+                // EevntoContext().Database.GetDbConnection().Close();
+
+                saveFileDialog.Filter = "Archivo SQLite (*.db)|*.db";
+                saveFileDialog.Title = "Exportar base de datos";
+                saveFileDialog.FileName = "backup.db";
+
+                if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        File.Copy(dbPath, saveFileDialog.FileName, true);
+                        MessageBox.Show("Base de datos exportada correctamente.");
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Error al exportar: " + ex.Message);
+                    }
+                }
+            }
+
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
+                openFileDialog.Filter = "Archivo SQLite (*.db)|*.db";
+                openFileDialog.Title = "Importar base de datos";
+
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        // Cerrar cualquier contexto anterior si es necesario (no crearlo antes)
+                        // Copiar el archivo nuevo de la base de datos
+                        File.Copy(openFileDialog.FileName, dbPath, true);
+
+                        MessageBox.Show("Base de datos importada correctamente. par aver lso cambios debe reiniciar la aplicaciÃ³n");
+
+                        // ðŸ”„ Crear un nuevo contexto despuÃ©s de importar
+                        Application.Restart();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Error al importar: " + ex.Message);
+                    }
+                }
             }
         }
 
+        private void materialCard1_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
     }
 }

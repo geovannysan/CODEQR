@@ -1,5 +1,8 @@
 ﻿using ClosedXML.Excel;
 using Entity;
+using Google.Protobuf.WellKnownTypes;
+using IronBarCode;
+using MaterialSkin.Controls;
 using Microsoft.Extensions.Logging;
 using NEWCODES.Aplicacion.DTO;
 using NEWCODES.Infraestructura.Persistencia;
@@ -16,7 +19,7 @@ using System.Text.Json;
 
 namespace NEWCODES.Vistas
 {
-    public partial class EventosIDServer : Form
+    public partial class EventosIDServer : MaterialForm
     {
         private int _ID;
         private HttpListener httpListener;
@@ -29,7 +32,8 @@ namespace NEWCODES.Vistas
         {
             InitializeComponent();
             _ID = id;
-
+            this.FormBorderStyle = FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
             Dispositivos.TabPages[0].Text = "SCANEO";
             Dispositivos.TabPages[1].Text = "DISPOCITIVOS";
             Dispositivos.TabPages[2].Text = "LOCALIDAD";
@@ -72,6 +76,12 @@ namespace NEWCODES.Vistas
                 }
 
                 Eventosinfo();
+
+                //Add Barcode value below the generated barcode
+                var qrcode = QRCodeWriter.CreateQrCode("absolute");
+                qrcode.AddBarcodeValueTextBelowBarcode();
+                qrcode.ToJpegBinaryData();
+
             }
             catch (Exception ex)
             {
@@ -119,7 +129,7 @@ namespace NEWCODES.Vistas
                 // string prefijo = $"http://+:{puerto}/ws/";
 
                 string prefijo = $"http://127.0.0.1:{puerto}/ws/";
-                
+
 
                 if (!httpListener.Prefixes.Contains(prefijo))
                 {
@@ -136,6 +146,7 @@ namespace NEWCODES.Vistas
                 label1.Visible = false;
                 ipserver.Text = GetLocalIPAddress() + ":" + puerto;
                 httpListener = new HttpListener();
+                pictureBox1.Visible = true;
                 button1.Text = "PARAR";
                 button1.BackColor = Color.Red;
                 button1.ForeColor = Color.White;
@@ -143,7 +154,7 @@ namespace NEWCODES.Vistas
             catch (Exception ex)
             {
                 //httpListener = new HttpListener();
-               // button1.Text = "INICIAR";
+                // button1.Text = "INICIAR";
                 AppendLog($"❌ Error al iniciar el servidor: {ex.Message}");
                 MessageBox.Show($"Error al iniciar el servido:\n Verifiqur si ejecuto como administrador", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
@@ -156,7 +167,7 @@ namespace NEWCODES.Vistas
         {
             try
             {
-                
+
                 TcpListener tcpListener = new TcpListener(IPAddress.Loopback, port);
                 tcpListener.Start();
                 tcpListener.Stop();
@@ -210,7 +221,7 @@ namespace NEWCODES.Vistas
 
                                 foreach (var device in disp)
                                 {
-                                    dataDispositi.Rows.Add(device.Id,device.Name, device.IDequipo, device.Estado);
+                                    dataDispositi.Rows.Add(device.Id, device.Name, device.IDequipo, device.Estado);
                                 }
 
                                 CargarClientesEnGrid();
@@ -300,26 +311,26 @@ namespace NEWCODES.Vistas
                     if (result.MessageType == WebSocketMessageType.Text)
                     {
                         string message = Encoding.UTF8.GetString(buffer, 0, result.Count);
-                     
+
                         // Responder
-                        string response = "Mensaje recibido: " + message; 
+                        string response = "Mensaje recibido: " + message;
                         var datosrecibidos = JsonSerializer.Deserialize<MessageSocket>(message);
                         Console.WriteLine(datosrecibidos);
 
                         AppendLog($"📩 [{clientId.IDequipo}] → {datosrecibidos.Type}");
 
-                        var verifica =   VerificaCodigo(Convert.ToString(clientId.Id), datosrecibidos);
-                      
+                        var verifica = VerificaCodigo(Convert.ToString(clientId.Id), datosrecibidos);
+
                         Console.Write(verifica);
-                        byte[] responseBuffer = Encoding.UTF8.GetBytes(JsonSerializer.Serialize( verifica));
-                     
+                        byte[] responseBuffer = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(verifica));
+
                         await webSocket.SendAsync(new ArraySegment<byte>(responseBuffer), WebSocketMessageType.Text, true, CancellationToken.None);
                         this.Invoke(new Action(() =>
                         {
                             Eventosinfo();
-                            
+
                         }));
-                        
+
                     }
                     else if (result.MessageType == WebSocketMessageType.Close)
                     {
@@ -333,7 +344,7 @@ namespace NEWCODES.Vistas
                             Estado = "Desconectado",
                             EventoID = clientId.EventoID,
                         };
-                       
+
                         var desonectado = dispoditivo.Update(dispo);
                         await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Desconectado", CancellationToken.None);
 
@@ -366,16 +377,16 @@ namespace NEWCODES.Vistas
 
             }
         }
-        private MessageSocket VerificaCodigo(string cliente,MessageSocket message)
+        private MessageSocket VerificaCodigo(string cliente, MessageSocket message)
         {
-          CodigosRepository codigos = new CodigosRepository();
+            CodigosRepository codigos = new CodigosRepository();
 
-           var vrc = codigos.Verifica(cliente,Convert.ToString( _ID ), message);
+            var vrc = codigos.Verifica(cliente, Convert.ToString(_ID), message);
 
             return vrc;
 
         }
-        
+
         private void Eventosinfo()
         {
             EventosRepository eventosRepository = new EventosRepository();
@@ -390,7 +401,7 @@ namespace NEWCODES.Vistas
             datagridLocalidad.Rows.Clear();
             foreach (var device in dispo)
             {
-                dataDispositi.Rows.Add(device.Id,device.Name, device.IDequipo, device.Estado);
+                dataDispositi.Rows.Add(device.Id, device.Name, device.IDequipo, device.Estado);
             }
             var localidad = localidades.GetInfo(Convert.ToString(_ID));
             Console.WriteLine(localidad);
@@ -436,6 +447,11 @@ namespace NEWCODES.Vistas
             try
             {
                 // Cancelar el cierre si querés evitarlo (por ejemplo, desactivar la X)
+                 if (puerto=="")
+                {
+                    e.Cancel = false;
+                    return;
+                }
                 e.Cancel = true;
                 DialogResult result = MessageBox.Show("¿Estás seguro que deseas cerrar el Programa?", "INFO", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
 
@@ -448,7 +464,8 @@ namespace NEWCODES.Vistas
                     // listenerThread?.Abort();
                 }
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 e.Cancel = false;
                 isRunning = false;
             }
@@ -487,13 +504,13 @@ namespace NEWCODES.Vistas
 
         private void CargarClientesEnGrid()
         {
-            datagridCliente.DataSource = null; 
+            datagridCliente.DataSource = null;
             List<ClienteSocket> lista = new List<ClienteSocket>();
 
             foreach (var kvp in connectedClients)
             {
                 var id = kvp.Key;
-                var estado = kvp.Value.State.ToString(); 
+                var estado = kvp.Value.State.ToString();
 
                 lista.Add(new ClienteSocket
                 {
@@ -501,7 +518,7 @@ namespace NEWCODES.Vistas
                     Estado = estado == "Closed" ? "Desconectado" : "Conectado"
                 });
             }
-           
+
             datagridCliente.DataSource = lista;
             var dat = lista.Where(x => x.Estado == "Conectado").ToList();
             scanerconetado.Text = dat.Count.ToString();
@@ -594,7 +611,7 @@ namespace NEWCODES.Vistas
                     {
                         DispoditivosRepsoitory dispoditivos = new DispoditivosRepsoitory();
                         dispoditivos.Delete(id);
-                       // Console.WriteLine(id,column);
+                        // Console.WriteLine(id,column);
                         DesconectarClienteAsync(idequipo);
                         dataDispositi.Rows.RemoveAt(e.RowIndex);
                         MessageBox.Show("Registro eliminado.");
@@ -603,12 +620,37 @@ namespace NEWCODES.Vistas
                 if (column.Name == "PermitirDisp")
                 {
                     // Obtener el ID de la fila
-                    DIspositivosF dIspositivos = new DIspositivosF(_ID,int.Parse( id));
+                    DIspositivosF dIspositivos = new DIspositivosF(_ID, int.Parse(id));
                     dIspositivos.ShowDialog();
                 }
 
             }
 
+        }
+
+        private void materialFloatingActionButton1_Click(object sender, EventArgs e)
+        {
+            var qrcodetxt = JsonSerializer.Serialize(new { ip = GetLocalIPAddress(), puertos = puerto });
+
+            //Add Barcode value below the generated barcode
+            //var qrcode = QRCodeWriter.CreateQrCode(qrcodetxt);
+            //qrcode.AddBarcodeValueTextBelowBarcode();
+            //qrcode.ToJpegBinaryData();
+            Qrcode qrcode1 = new Qrcode(qrcodetxt);
+            qrcode1.ShowDialog();
+
+        }
+
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+            var qrcodetxt = JsonSerializer.Serialize(new { ip = GetLocalIPAddress(), puertos = puerto });
+
+            //Add Barcode value below the generated barcode
+            //var qrcode = QRCodeWriter.CreateQrCode(qrcodetxt);
+            //qrcode.AddBarcodeValueTextBelowBarcode();
+            //qrcode.ToJpegBinaryData();
+            Qrcode qrcode1 = new Qrcode(qrcodetxt);
+            qrcode1.ShowDialog();
         }
     }
 }

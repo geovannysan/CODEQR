@@ -1,17 +1,20 @@
 ﻿using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
+using MaterialSkin.Controls;
 using NEWCODES.Infraestructura.Persistencia;
 using System.Data;
 
 namespace NEWCODES.Vistas.Codigos
 {
-    public partial class Codigos : Form
+    public partial class Codigos :MaterialForm
     {
         private int _ID;
         public Codigos(int id)
         {
             InitializeComponent();
             _ID = id;
+            this.FormBorderStyle = FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -118,9 +121,11 @@ namespace NEWCODES.Vistas.Codigos
                 repo.Insert(info,0);
             }
                 var lista = repo.Get();
+            this.Close();
+
+            MessageBox.Show($"{lista.Count()}");
             EventosIDServer eventosIDServer = new EventosIDServer(_ID);
             eventosIDServer.ShowDialog();
-            MessageBox.Show($"{lista.Count()}");
         }
 
         private void Codigos_Load(object sender, EventArgs e)

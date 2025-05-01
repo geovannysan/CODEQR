@@ -1,16 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using MaterialSkin.Controls;
 
 namespace NEWCODES.Vistas.Componetes
 {
-    public partial class FormAprobacion : Form
+    public partial class FormAprobacion : MaterialForm
     {
 
         private int tiempoRestante = 10; // segundos
@@ -20,6 +12,8 @@ namespace NEWCODES.Vistas.Componetes
         public FormAprobacion(string clientId)
         {
             InitializeComponent();
+            this.FormBorderStyle = FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
             progressBar.Value = 10;
             lblMensaje.Text = $"Nueva conexión desde ID: {clientId}";
             lblTiempo.Text = $"Tiempo restante: {tiempoRestante} s";

@@ -38,7 +38,7 @@
             // lblMensaje
             // 
             lblMensaje.AutoSize = true;
-            lblMensaje.Location = new Point(94, 26);
+            lblMensaje.Location = new Point(98, 76);
             lblMensaje.Name = "lblMensaje";
             lblMensaje.Size = new Size(194, 15);
             lblMensaje.TabIndex = 0;
@@ -47,7 +47,7 @@
             // lblTiempo
             // 
             lblTiempo.AutoSize = true;
-            lblTiempo.Location = new Point(119, 69);
+            lblTiempo.Location = new Point(128, 104);
             lblTiempo.Name = "lblTiempo";
             lblTiempo.Size = new Size(118, 15);
             lblTiempo.TabIndex = 1;
@@ -56,7 +56,7 @@
             // 
             // btnAceptar
             // 
-            btnAceptar.Location = new Point(39, 139);
+            btnAceptar.Location = new Point(48, 174);
             btnAceptar.Name = "btnAceptar";
             btnAceptar.Size = new Size(75, 23);
             btnAceptar.TabIndex = 2;
@@ -66,7 +66,7 @@
             // 
             // btnRechazar
             // 
-            btnRechazar.Location = new Point(251, 139);
+            btnRechazar.Location = new Point(260, 174);
             btnRechazar.Name = "btnRechazar";
             btnRechazar.Size = new Size(75, 23);
             btnRechazar.TabIndex = 3;
@@ -76,7 +76,7 @@
             // 
             // progressBar
             // 
-            progressBar.Location = new Point(39, 96);
+            progressBar.Location = new Point(48, 122);
             progressBar.MarqueeAnimationSpeed = 10;
             progressBar.Maximum = 10;
             progressBar.Name = "progressBar";
@@ -87,7 +87,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(372, 176);
+            ClientSize = new Size(388, 215);
             Controls.Add(lblMensaje);
             Controls.Add(lblTiempo);
             Controls.Add(progressBar);
@@ -96,7 +96,7 @@
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Name = "FormAprobacion";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "FormAprobacion";
+            Text = "Aprobacion";
             Load += FormAprobacion_Load;
             ResumeLayout(false);
             PerformLayout();

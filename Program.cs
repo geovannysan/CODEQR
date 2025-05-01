@@ -16,6 +16,7 @@ namespace NEWCODES
                 context.Database.EnsureCreated(); // O context.Database.EnsureCreated();
             }
 
+
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
             Application.EnableVisualStyles();

@@ -1,15 +1,14 @@
 ﻿using ClosedXML.Excel;
 using Entity;
-using Google.Protobuf.WellKnownTypes;
-using IronBarCode;
 using MaterialSkin.Controls;
-using Microsoft.Extensions.Logging;
+using Microsoft.Win32;
 using NEWCODES.Aplicacion.DTO;
 using NEWCODES.Infraestructura.Persistencia;
 using NEWCODES.Infraestructura.Utils;
 using NEWCODES.Vistas.Codigos;
 using NEWCODES.Vistas.Componetes;
 using NEWCODES.Vistas.Despositivo;
+using System.Diagnostics;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
@@ -77,31 +76,34 @@ namespace NEWCODES.Vistas
 
                 Eventosinfo();
 
-                //Add Barcode value below the generated barcode
-                var qrcode = QRCodeWriter.CreateQrCode("absolute");
-                qrcode.AddBarcodeValueTextBelowBarcode();
-                qrcode.ToJpegBinaryData();
-
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message + "Erorr", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-
         }
-        private Dictionary<string, WebSocket> connectedClients = new Dictionary<string, WebSocket>();
-
         private async void StartWebSocketServer()
         {
             try
             {
+                string puertoTexto = puertoTxt.Text.Trim();
+                if (string.IsNullOrEmpty(puertoTxt.Text)) return;
                 if (button1.Text == "PARAR")
                 {
-                    this.Close();
+                    puertoTxt.Visible = true;
+                    label1.Visible = true;
+                    //   ipserver.Text = GetLocalIPAddress() + ":" + puerto;
+                    pictureBox1.Visible = false;
+                    httpListener?.Stop();
+
+                    button1.Text = "INICIAR";
+                    button1.BackColor = Color.White;
+                    button1.ForeColor = Color.Black;
+                    isRunning = false;
+                    _ = Task.Run(() => EliminarPuertoFirewall(Convert.ToInt32(puertoTexto)));
+                    // this.Close();                
                     return;
                 }
-
-                string puertoTexto = puertoTxt.Text.Trim();
 
                 // Validación del puerto
                 if (!int.TryParse(puertoTexto, out int puerto) || puertoTexto.Length < 4)
@@ -124,17 +126,20 @@ namespace NEWCODES.Vistas
                     return;
                 }
 
-                // Obtener IP local válida
                 string ip = GetLocalIPAddress();
-                // string prefijo = $"http://+:{puerto}/ws/";
 
-                string prefijo = $"http://127.0.0.1:{puerto}/ws/";
+                //string prefijo = $"http://127.0.0.1:5425/ws/";
 
+                httpListener = new HttpListener();
+
+                string prefijo = $"http://+:{puerto}/ws/";
 
                 if (!httpListener.Prefixes.Contains(prefijo))
                 {
                     httpListener.Prefixes.Add(prefijo);
                 }
+                _ = Task.Run(() => AbrirPuertoFirewall(Convert.ToInt32(puerto)));
+                //_ = Task.Run(=>)  AbrirPuertoFirewall(Convert.ToInt32(puerto));
 
                 httpListener.Start();
                 AppendLog($"✅ Servidor WebSocket iniciado en http://{GetLocalIPAddress()}:{puerto}/ws/");
@@ -145,9 +150,9 @@ namespace NEWCODES.Vistas
                 puertoTxt.Visible = false;
                 label1.Visible = false;
                 ipserver.Text = GetLocalIPAddress() + ":" + puerto;
-                httpListener = new HttpListener();
                 pictureBox1.Visible = true;
                 button1.Text = "PARAR";
+                isRunning = true;
                 button1.BackColor = Color.Red;
                 button1.ForeColor = Color.White;
             }
@@ -163,6 +168,7 @@ namespace NEWCODES.Vistas
         /**
          * Verificacion de puerto en usao 
          * */
+
         private bool IsPortInUse(int port)
         {
             try
@@ -182,6 +188,9 @@ namespace NEWCODES.Vistas
         /* escucha Conexion Socket
          *
          */
+
+        //private Dictionary<string, WebSocket> connectedClients = new Dictionary<string, WebSocket>();
+        private Dictionary<string, List<WebSocket>> connectedClients = new Dictionary<string, List<WebSocket>>();
         private async void ListenForWebSocketConnections()
         {
             while (httpListener.IsListening)
@@ -190,106 +199,152 @@ namespace NEWCODES.Vistas
                 {
                     DispoditivosRepsoitory dispoditivos = new DispoditivosRepsoitory();
                     var context = await httpListener.GetContextAsync();
-                    if (context.Request.IsWebSocketRequest)
-                    {
 
-                        string clientId = context.Request.QueryString["clientId"] ?? "";
-                        var consulta = dispoditivos.GetUnic(clientId, _ID);
-                        if (consulta != null)
-                        {
-                            WebSocket webSocket = (await context.AcceptWebSocketAsync(null)).WebSocket;
-                            connectedClients[clientId] = webSocket;
-                            AppendLog("✅ Conexión WebSocket aceptada.");
-                            var desonectado = dispoditivos.Update(new Dispositivos
-                            {
-                                Id = consulta.Id,
-                                Name = consulta.Name,
-                                IDequipo = consulta.IDequipo,
-                                Ip = consulta.Ip,
-                                Estado = "Conectado",
-                                EventoID = consulta.EventoID,
-                            });
-
-
-                            connectedClients[clientId] = webSocket;
-                            DispoditivosRepsoitory dispod = new DispoditivosRepsoitory();
-                            //  DispoditivosRepsoitory dispoditiv = new DispoditivosRepsoitory();
-                            var disp = dispod.Getlist(_ID);
-                            this.Invoke(new Action(() =>
-                            {
-                                dataDispositi.Rows.Clear();
-
-                                foreach (var device in disp)
-                                {
-                                    dataDispositi.Rows.Add(device.Id, device.Name, device.IDequipo, device.Estado);
-                                }
-
-                                CargarClientesEnGrid();
-                            }));
-                            await HandleWebSocketMessages(consulta, webSocket);
-                        }
-                        else
-                        {
-                            string remoteIP = context.Request.RemoteEndPoint?.ToString() ?? "Desconocido";
-                            bool aceptar = false;
-                            using (var form = new FormAprobacion(clientId))
-                            {
-                                form.ShowDialog();
-                                aceptar = form.Aprobado;
-                            }
-                            /* Invoke(new Action(() =>
-                             {
-                                 var result = MessageBox.Show($"Nueva conexión entrante desde {remoteIP} {clientId}. ¿Aceptar?", "Aprobar conexión", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                                 aceptar = (result == DialogResult.Yes);
-                             }));*/
-
-                            if (aceptar)
-                            {
-                                var registro = dispoditivos.Insert(new Dispositivos
-                                {
-                                    Name = clientId,
-                                    IDequipo = clientId,
-                                    Ip = remoteIP,
-                                    Estado = "conectado",
-                                    EventoID = _ID,
-                                }, _ID);
-                                WebSocket webSocket = (await context.AcceptWebSocketAsync(null)).WebSocket;
-                                connectedClients[clientId] = webSocket;
-
-
-                                AppendLog("✅ Conexión WebSocket aceptada.");
-                                await HandleWebSocketMessages(registro, webSocket);
-                                DispoditivosRepsoitory dispoditiv = new DispoditivosRepsoitory();
-                                var disp = dispoditivos.Getlist(_ID);
-                                this.Invoke(new Action(() =>
-                                {
-                                    dataDispositi.Rows.Clear();
-
-                                    foreach (var device in disp)
-                                    {
-                                        dataDispositi.Rows.Add(device.Id, device.Name, device.IDequipo, device.Estado);
-                                    }
-                                    CargarClientesEnGrid();
-                                }));
-                            }
-                            else
-                            {
-                                AppendLog("❌ Conexión rechazada.");
-                                context.Response.StatusCode = 403;
-                                context.Response.Close();
-                            }
-                        }
-                    }
-                    else
+                    if (!context.Request.IsWebSocketRequest)
                     {
                         context.Response.StatusCode = 400;
                         context.Response.Close();
+                        continue;
+                    }
+
+                    string clientId = context.Request.QueryString["clientId"]?.Trim('"') ?? "";
+
+                    if (string.IsNullOrWhiteSpace(clientId))
+                    {
+                        AppendLog("❌ Conexión sin clientId.");
+                        context.Response.StatusCode = 400;
+                        context.Response.Close();
+                        continue;
+                    }
+
+                    var consulta = dispoditivos.GetUnic(clientId, _ID);
+
+                    if (consulta != null)
+                    {
+                        // Cliente ya registrado
+                        WebSocket webSocket = (await context.AcceptWebSocketAsync(null)).WebSocket;
+
+                        if (!connectedClients.ContainsKey(clientId))
+                            connectedClients[clientId] = new List<WebSocket>();
+
+                        connectedClients[clientId].Add(webSocket);
+
+                        AppendLog("✅ Conexión WebSocket aceptada.");
+
+                        dispoditivos.Update(new Dispositivos
+                        {
+                            Id = consulta.Id,
+                            Name = consulta.Name,
+                            IDequipo = consulta.IDequipo,
+                            Ip = consulta.Ip,
+                            Estado = "Conectado",
+                            EventoID = consulta.EventoID,
+                        });
+
+                        var disp = dispoditivos.Getlist(_ID);
+                        this.Invoke(new Action(() =>
+                        {
+                            dataDispositi.Rows.Clear();
+                            foreach (var device in disp)
+                                dataDispositi.Rows.Add(device.Id, device.Name, device.IDequipo, device.Estado);
+                            CargarClientesEnGrid();
+                        }));
+
+                        _ = Task.Run(() => HandleWebSocketMessages(consulta, webSocket));
+                    }
+                    else
+                    {
+                        // Cliente no registrado
+                        string remoteIP = context.Request.RemoteEndPoint?.ToString() ?? "Desconocido";
+
+                        // Mostrar el formulario de aprobación en un hilo aparte para evitar bloqueo
+                        Task<bool> solicitudAprobacion = Task.Run(() =>
+                        {
+                            bool aprobado = false;
+
+                            this.Invoke(new MethodInvoker(() =>
+                            {
+                                using (var form = new FormAprobacion(clientId))
+                                {
+                                    form.ShowDialog();
+                                    aprobado = form.Aprobado;
+                                }
+                            }));
+
+                            return aprobado;
+                        });
+
+                        bool aceptar = await solicitudAprobacion;
+
+                        if (aceptar)
+                        {
+                            var registro = dispoditivos.Insert(new Dispositivos
+                            {
+                                Name = clientId,
+                                IDequipo = clientId,
+                                Ip = remoteIP,
+                                Estado = "Conectado",
+                                EventoID = _ID,
+                            }, _ID);
+
+                            WebSocket webSocket = (await context.AcceptWebSocketAsync(null)).WebSocket;
+
+                            if (!connectedClients.ContainsKey(clientId))
+                                connectedClients[clientId] = new List<WebSocket>();
+
+                            connectedClients[clientId].Add(webSocket);
+
+                            AppendLog("✅ Conexión WebSocket aceptada (nuevo cliente).");
+
+                            var disp = dispoditivos.Getlist(_ID);
+                            this.Invoke(new Action(() =>
+                            {
+                                dataDispositi.Rows.Clear();
+                                foreach (var device in disp)
+                                    dataDispositi.Rows.Add(device.Id, device.Name, device.IDequipo, device.Estado);
+                                CargarClientesEnGrid();
+                            }));
+
+                            _ = Task.Run(() => HandleWebSocketMessages(registro, webSocket));
+                        }
+                        else
+                        {
+                            AppendLog("❌ Conexión rechazada.");
+                            context.Response.StatusCode = 403;
+                            context.Response.Close();
+                        }
                     }
                 }
                 catch (Exception ex)
                 {
-                    AppendLog($"Error en la conexión WebSocket: {ex.Message}");
+                    AppendLog($"❌ Error en la conexión WebSocket: {ex.Message}");
                 }
+            }
+        }
+
+
+
+        public void AbrirPuertoFirewall(int puerto)
+        {
+            string nombreRegla = $"Regla WebSocket Puerto {puerto}";
+            string grupoReglas = "WebSocketApp";
+            string comando = $"advfirewall firewall add rule name=\"{nombreRegla}\" dir=in action=allow protocol=TCP localport={puerto} group=\"{grupoReglas}\"";
+
+
+            ProcessStartInfo psi = new ProcessStartInfo("netsh", comando)
+            {
+                Verb = "runas",
+                CreateNoWindow = true,
+                UseShellExecute = true
+            };
+
+            try
+            {
+                Process.Start(psi);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al crear la regla del firewall: " + ex.Message);
             }
         }
 
@@ -304,6 +359,7 @@ namespace NEWCODES.Vistas
             try
             {
                 DispoditivosRepsoitory dispoditivo = new DispoditivosRepsoitory();
+
                 while (webSocket.State == WebSocketState.Open)
                 {
                     result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
@@ -311,70 +367,100 @@ namespace NEWCODES.Vistas
                     if (result.MessageType == WebSocketMessageType.Text)
                     {
                         string message = Encoding.UTF8.GetString(buffer, 0, result.Count);
-
-                        // Responder
-                        string response = "Mensaje recibido: " + message;
                         var datosrecibidos = JsonSerializer.Deserialize<MessageSocket>(message);
-                        Console.WriteLine(datosrecibidos);
 
                         AppendLog($"📩 [{clientId.IDequipo}] → {datosrecibidos.Type}");
 
                         var verifica = VerificaCodigo(Convert.ToString(clientId.Id), datosrecibidos);
-
-                        Console.Write(verifica);
                         byte[] responseBuffer = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(verifica));
 
                         await webSocket.SendAsync(new ArraySegment<byte>(responseBuffer), WebSocketMessageType.Text, true, CancellationToken.None);
+
                         this.Invoke(new Action(() =>
                         {
                             Eventosinfo();
-
                         }));
-
                     }
                     else if (result.MessageType == WebSocketMessageType.Close)
                     {
-
-                        var dispo = new Dispositivos
-                        {
-                            Id = clientId.Id,
-                            Name = clientId.Name,
-                            IDequipo = clientId.IDequipo,
-                            Ip = clientId.Ip,
-                            Estado = "Desconectado",
-                            EventoID = clientId.EventoID,
-                        };
-
-                        var desonectado = dispoditivo.Update(dispo);
-                        await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Desconectado", CancellationToken.None);
-
-                        var disp = dispoditivo.Getlist(_ID);
-                        this.Invoke(new Action(() =>
-                        {
-                            dataDispositi.Rows.Clear();
-
-                            foreach (var device in disp)
-                            {
-                                dataDispositi.Rows.Add(device.Id, device.Name, device.IDequipo, device.Estado);
-                            }
-                            CargarClientesEnGrid();
-                        }));
-
+                        break; // permite salir para que se ejecute el finally
                     }
                 }
             }
             catch (Exception ex)
             {
-                AppendLog($"⚠️ Error con cliente {clientId}: {ex.Message}");
+                AppendLog($"⚠️ Error con cliente {clientId.IDequipo}: {ex.Message}");
             }
             finally
             {
-                // Limpieza al desconectar
-                if (connectedClients.ContainsKey(clientId.IDequipo))
+                try
                 {
-                    connectedClients.Remove(clientId.IDequipo);
-                }
+                    // Actualiza estado en DB
+                    DispoditivosRepsoitory dispoditivo = new DispoditivosRepsoitory();
+                    var dispo = new Dispositivos
+                    {
+                        Id = clientId.Id,
+                        Name = clientId.Name,
+                        IDequipo = clientId.IDequipo,
+                        Ip = clientId.Ip,
+                        Estado = "Desconectado",
+                        EventoID = clientId.EventoID,
+                    };
+                    dispoditivo.Update(dispo);
 
+                    // Cierra socket si aún está abierto
+                    if (webSocket.State != WebSocketState.Closed)
+                    {
+                        await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Desconectado", CancellationToken.None);
+                    }
+
+                    // Elimina solo este socket del diccionario
+                    if (connectedClients.TryGetValue(clientId.IDequipo, out var sockets))
+                    {
+                        sockets.Remove(webSocket);
+                        if (sockets.Count == 0)
+                            connectedClients.Remove(clientId.IDequipo);
+                    }
+
+                    // Refresca UI
+                    var disp = dispoditivo.Getlist(_ID);
+                    this.Invoke(new Action(() =>
+                    {
+                        dataDispositi.Rows.Clear();
+                        foreach (var device in disp)
+                        {
+                            dataDispositi.Rows.Add(device.Id, device.Name, device.IDequipo, device.Estado);
+                        }
+                        CargarClientesEnGrid();
+                    }));
+
+                    AppendLog($"🔌 Cliente {clientId.IDequipo} desconectado.");
+                }
+                catch (Exception cleanupEx)
+                {
+                    AppendLog($"⚠️ Error durante la limpieza de {clientId.IDequipo}: {cleanupEx.Message}");
+                }
+            }
+        }
+        public void EliminarPuertoFirewall(int puerto)
+        {
+            string nombreRegla = $"Regla WebSocket Puerto {puerto}";
+            string comando = $"advfirewall firewall delete rule name=\"{nombreRegla}\" protocol=TCP localport={puerto}";
+
+            ProcessStartInfo psi = new ProcessStartInfo("netsh", comando)
+            {
+                Verb = "runas", // Ejecutar como administrador
+                CreateNoWindow = true,
+                UseShellExecute = true
+            };
+
+            try
+            {
+                Process.Start(psi);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al eliminar la regla del firewall: " + ex.Message);
             }
         }
         private MessageSocket VerificaCodigo(string cliente, MessageSocket message)
@@ -447,22 +533,17 @@ namespace NEWCODES.Vistas
             try
             {
                 // Cancelar el cierre si querés evitarlo (por ejemplo, desactivar la X)
-                 if (puerto=="")
+                if (isRunning)
                 {
-                    e.Cancel = false;
+                    e.Cancel = true;
+                    DialogResult result = MessageBox.Show("Debe Detener El servicio Antes de Salir", "INFO", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
+
+
+
                     return;
                 }
-                e.Cancel = true;
-                DialogResult result = MessageBox.Show("¿Estás seguro que deseas cerrar el Programa?", "INFO", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
+                e.Cancel = false;
 
-
-                if (result == DialogResult.OK)
-                {
-                    e.Cancel = false;
-                    isRunning = false;
-                    httpListener?.Stop();
-                    // listenerThread?.Abort();
-                }
             }
             catch (Exception ex)
             {
@@ -477,23 +558,29 @@ namespace NEWCODES.Vistas
             string localIP = string.Empty;
             foreach (var networkInterface in NetworkInterface.GetAllNetworkInterfaces())
             {
-                // Verificamos si la interfaz está activa y conectada
-                if (networkInterface.OperationalStatus == OperationalStatus.Up)
+                // Solo interfaces activas y que no sean loopback
+                if (networkInterface.OperationalStatus == OperationalStatus.Up &&
+                    networkInterface.NetworkInterfaceType != NetworkInterfaceType.Loopback)
                 {
                     var ipProperties = networkInterface.GetIPProperties();
-                    foreach (var ipAddress in ipProperties.UnicastAddresses)
+
+                    // Verificar si tiene puerta de enlace válida
+                    if (ipProperties.GatewayAddresses.Any(g => g.Address.AddressFamily == AddressFamily.InterNetwork &&
+                                                               !IPAddress.IsLoopback(g.Address) &&
+                                                               !g.Address.Equals(IPAddress.Any)))
                     {
-                        // Filtramos por la dirección IPv4
-                        if (ipAddress.Address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+                        foreach (var ipAddress in ipProperties.UnicastAddresses)
                         {
-                            localIP = ipAddress.Address.ToString();
-                            return localIP;
+                            if (ipAddress.Address.AddressFamily == AddressFamily.InterNetwork)
+                            {
+                                return ipAddress.Address.ToString();
+                            }
                         }
                     }
                 }
             }
-            return localIP; // En caso de no encontrar la IP, regresamos vacío
-            // MessageBox.Show("Tú IP Local Es: " + localIP);
+
+            return string.Empty; // No se encontró IP con puerta de enlace válida
         }
 
         private void groupBox1_Enter(object sender, EventArgs e)
@@ -510,12 +597,15 @@ namespace NEWCODES.Vistas
             foreach (var kvp in connectedClients)
             {
                 var id = kvp.Key;
-                var estado = kvp.Value.State.ToString();
 
+                var conexiones = kvp.Value;
+
+                // Si al menos un socket está abierto, consideramos al cliente como conectado
+                bool hayConectado = conexiones.Any(ws => ws.State == WebSocketState.Open);
                 lista.Add(new ClienteSocket
                 {
                     Dispositivo = id,
-                    Estado = estado == "Closed" ? "Desconectado" : "Conectado"
+                    Estado = conexiones.ToString() == "Closed" ? "Desconectado" : "Conectado"
                 });
             }
 
@@ -553,7 +643,38 @@ namespace NEWCODES.Vistas
         }
         public async Task DesconectarClienteAsync(string clientId)
         {
-            if (connectedClients.TryGetValue(clientId, out WebSocket socket))
+            if (connectedClients.TryGetValue(clientId, out List<WebSocket> sockets))
+            {
+                foreach (var socket in sockets.ToList()) // Clonar para evitar modificar mientras se itera
+                {
+                    if (socket.State == WebSocketState.Open || socket.State == WebSocketState.CloseReceived)
+                    {
+                        try
+                        {
+                            await socket.CloseAsync(
+                                WebSocketCloseStatus.NormalClosure,
+                                "Desconexión solicitada",
+                                CancellationToken.None
+                            );
+                        }
+                        catch (Exception ex)
+                        {
+                            // Log opcional
+                            AppendLog($"Error al cerrar conexión WebSocket: {ex.Message}");
+                        }
+                    }
+                }
+
+                // Limpiar conexiones cerradas
+                sockets.RemoveAll(ws => ws.State != WebSocketState.Open);
+
+                // Si ya no queda ninguna, quitar el cliente del diccionario
+                if (sockets.Count == 0)
+                {
+                    connectedClients.Remove(clientId);
+                }
+            }
+            /*if (connectedClients.TryGetValue(clientId, out WebSocket socket))
             {
                 if (socket.State == WebSocketState.Open || socket.State == WebSocketState.CloseReceived)
                 {
@@ -564,7 +685,7 @@ namespace NEWCODES.Vistas
                     );
                 }
                 connectedClients.Remove(clientId);
-            }
+            }*/
         }
         private void ExportarCodigos_Click(object sender, EventArgs e)
         {
@@ -579,7 +700,7 @@ namespace NEWCODES.Vistas
                 {
                     for (int j = 0; j < datagridcoidgos.Columns.Count; j++)
                     {
-                        worksheet.Cell(i + 2, j + 1).Value = datagridcoidgos.Rows[i].Cells[j].Value.ToString();
+                        worksheet.Cell(i + 2, j + 1).Value = datagridcoidgos.Rows[i].Cells[j].Value?.ToString();
                     }
                 }
                 SaveFileDialog saveFileDialog = new SaveFileDialog();
@@ -604,30 +725,23 @@ namespace NEWCODES.Vistas
                 var id = dataDispositi.Rows[e.RowIndex].Cells["IDDispo"].Value?.ToString();
                 if (column.Name == "EliminarDis")
                 {
-
-                    DialogResult result = MessageBox.Show("¿Estás seguro que deseas Eliminar este Dispositivo?", "Confirmar", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
-
+                    DialogResult result = MessageBox.Show("¿Estás seguro que deseas Eliminar este Dispositivo?", "Confirmar", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
                     if (result == DialogResult.OK)
                     {
                         DispoditivosRepsoitory dispoditivos = new DispoditivosRepsoitory();
                         dispoditivos.Delete(id);
-                        // Console.WriteLine(id,column);
-                        DesconectarClienteAsync(idequipo);
                         dataDispositi.Rows.RemoveAt(e.RowIndex);
-                        MessageBox.Show("Registro eliminado.");
+                        DesconectarClienteAsync(idequipo);
+                        MessageBox.Show("Registro eliminado." + idequipo);
                     }
                 }
                 if (column.Name == "PermitirDisp")
                 {
-                    // Obtener el ID de la fila
                     DIspositivosF dIspositivos = new DIspositivosF(_ID, int.Parse(id));
                     dIspositivos.ShowDialog();
                 }
-
             }
-
         }
-
         private void materialFloatingActionButton1_Click(object sender, EventArgs e)
         {
             var qrcodetxt = JsonSerializer.Serialize(new { ip = GetLocalIPAddress(), puertos = puerto });
@@ -643,7 +757,7 @@ namespace NEWCODES.Vistas
 
         private void pictureBox1_Click(object sender, EventArgs e)
         {
-            var qrcodetxt = JsonSerializer.Serialize(new { ip = GetLocalIPAddress(), puertos = puerto });
+            var qrcodetxt = JsonSerializer.Serialize(new { ip = GetLocalIPAddress(), puerto = puertoTxt.Text });
 
             //Add Barcode value below the generated barcode
             //var qrcode = QRCodeWriter.CreateQrCode(qrcodetxt);
@@ -651,6 +765,27 @@ namespace NEWCODES.Vistas
             //qrcode.ToJpegBinaryData();
             Qrcode qrcode1 = new Qrcode(qrcodetxt);
             qrcode1.ShowDialog();
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            /* if (button1.Text == "PARAR")
+             {
+                 DialogResult result = MessageBox.Show("¿Estás seguro que deseas Eliminar este Dispositivo?", "Confirmar", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
+
+                 if (result == DialogResult.OK)
+                 {
+
+                 }
+             }*/
+            CodigosView codigos = new CodigosView(_ID);
+            // this.Close();
+            codigos.ShowDialog();
+        }
+
+        private void datagridLocalidad_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
         }
     }
 }

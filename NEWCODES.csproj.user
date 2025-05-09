@@ -7,7 +7,7 @@
     <Compile Update="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Vistas\Codigos\Codigos.cs">
+    <Compile Update="Vistas\Codigos\CodigosView.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="Vistas\Codigos\Qrcode.cs">

@@ -1,13 +1,4 @@
-﻿using IronBarCode;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using QRCoder;
 
 namespace NEWCODES.Vistas.Codigos
 {
@@ -22,16 +13,12 @@ namespace NEWCODES.Vistas.Codigos
 
         private void Qrcode_Load(object sender, EventArgs e)
         {
-            //byte[] jpegData = _jpegData.ToJpegBinaryData();
-            var qrcode = QRCodeWriter.CreateQrCode(_jpegData);
-            qrcode.AddBarcodeValueTextBelowBarcode();
-           // qrcode.ToJpegBinaryData();
-            byte[] jpegData = qrcode.ToJpegBinaryData();
-            using (var ms = new MemoryStream(jpegData))
-             {
-                 Image qrImage = Image.FromStream(ms);
-                 pictureBox1.Image = qrImage; // Asignarlo al PictureBox
-             }
+            QRCodeGenerator qrGenerator = new QRCodeGenerator();
+            QRCodeData qrCodeData = qrGenerator.CreateQrCode(_jpegData, QRCodeGenerator.ECCLevel.Q);
+            QRCode qrCode = new QRCode(qrCodeData);
+            Bitmap qrCodeImage = qrCode.GetGraphic(20);
+
+            pictureBox1.Image = qrCodeImage;
         }
     }
 }

@@ -76,7 +76,7 @@
             // 
             // progressBar
             // 
-            progressBar.Location = new Point(48, 122);
+            progressBar.Location = new Point(48, 136);
             progressBar.MarqueeAnimationSpeed = 10;
             progressBar.Maximum = 10;
             progressBar.Name = "progressBar";
@@ -87,7 +87,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(388, 215);
+            ClientSize = new Size(404, 254);
             Controls.Add(lblMensaje);
             Controls.Add(lblTiempo);
             Controls.Add(progressBar);

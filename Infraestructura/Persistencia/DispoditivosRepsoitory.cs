@@ -16,6 +16,7 @@ namespace NEWCODES.Infraestructura.Persistencia
             if (dispo != null)
             {
                 _context.Remove(dispo);
+                _context.SaveChanges();
                 return true;
             }
             return false;

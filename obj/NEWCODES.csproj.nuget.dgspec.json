@@ -50,10 +50,6 @@
         "net8.0-windows7.0": {
           "targetAlias": "net8.0-windows",
           "dependencies": {
-            "BarCode": {
-              "target": "Package",
-              "version": "[2025.4.2, )"
-            },
             "ClosedXML": {
               "target": "Package",
               "version": "[0.104.2, )"
@@ -85,6 +81,10 @@
               "suppressParent": "All",
               "target": "Package",
               "version": "[8.0.0, )"
+            },
+            "QRCoder": {
+              "target": "Package",
+              "version": "[1.6.0, )"
             }
           },
           "imports": [

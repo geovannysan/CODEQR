@@ -31,7 +31,7 @@ namespace NEWCODES.Infraestructura.Persistencia
 
         public Codigos Insert(Codigos item, int id)
         {
-            var codigos = _context.Set<Codigos>().AsNoTracking().FirstOrDefault(x=>x.Codigo == item.Codigo);
+            var codigos = _context.Set<Codigos>().AsNoTracking().FirstOrDefault(x=>x.Codigo == item.Codigo && x.EventoID ==item.EventoID);
              if (codigos == null)
             {
                 _context.Codigos.Add(item);
@@ -50,7 +50,7 @@ namespace NEWCODES.Infraestructura.Persistencia
             }
             else
             {
-                return codigos;
+                return null;
             }
         }
         public MessageSocket Verifica(string id,string idevent,MessageSocket message)

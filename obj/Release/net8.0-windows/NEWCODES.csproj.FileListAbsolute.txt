@@ -9,6 +9,7 @@ D:\NET\NEWCODES\NEWCODES\bin\Release\net8.0-windows\DocumentFormat.OpenXml.dll
 D:\NET\NEWCODES\NEWCODES\bin\Release\net8.0-windows\DocumentFormat.OpenXml.Framework.dll
 D:\NET\NEWCODES\NEWCODES\bin\Release\net8.0-windows\ExcelNumberFormat.dll
 D:\NET\NEWCODES\NEWCODES\bin\Release\net8.0-windows\Humanizer.dll
+D:\NET\NEWCODES\NEWCODES\bin\Release\net8.0-windows\MaterialSkin.dll
 D:\NET\NEWCODES\NEWCODES\bin\Release\net8.0-windows\Microsoft.Bcl.AsyncInterfaces.dll
 D:\NET\NEWCODES\NEWCODES\bin\Release\net8.0-windows\Microsoft.CodeAnalysis.dll
 D:\NET\NEWCODES\NEWCODES\bin\Release\net8.0-windows\Microsoft.CodeAnalysis.CSharp.dll
@@ -31,6 +32,7 @@ D:\NET\NEWCODES\NEWCODES\bin\Release\net8.0-windows\Microsoft.Extensions.Logging
 D:\NET\NEWCODES\NEWCODES\bin\Release\net8.0-windows\Microsoft.Extensions.Options.dll
 D:\NET\NEWCODES\NEWCODES\bin\Release\net8.0-windows\Microsoft.Extensions.Primitives.dll
 D:\NET\NEWCODES\NEWCODES\bin\Release\net8.0-windows\Mono.TextTemplating.dll
+D:\NET\NEWCODES\NEWCODES\bin\Release\net8.0-windows\QRCoder.dll
 D:\NET\NEWCODES\NEWCODES\bin\Release\net8.0-windows\RBush.dll
 D:\NET\NEWCODES\NEWCODES\bin\Release\net8.0-windows\SixLabors.Fonts.dll
 D:\NET\NEWCODES\NEWCODES\bin\Release\net8.0-windows\SQLitePCLRaw.batteries_v2.dll
@@ -118,7 +120,8 @@ D:\NET\NEWCODES\NEWCODES\bin\Release\net8.0-windows\runtimes\win-x86\native\e_sq
 D:\NET\NEWCODES\NEWCODES\obj\Release\net8.0-windows\NEWCODES.csproj.AssemblyReference.cache
 D:\NET\NEWCODES\NEWCODES\obj\Release\net8.0-windows\NEWCODES.Form1.resources
 D:\NET\NEWCODES\NEWCODES\obj\Release\net8.0-windows\NEWCODES.Properties.Resources.resources
-D:\NET\NEWCODES\NEWCODES\obj\Release\net8.0-windows\NEWCODES.Vistas.Codigos.Codigos.resources
+D:\NET\NEWCODES\NEWCODES\obj\Release\net8.0-windows\NEWCODES.Vistas.Codigos.CodigosView.resources
+D:\NET\NEWCODES\NEWCODES\obj\Release\net8.0-windows\NEWCODES.Vistas.Codigos.Qrcode.resources
 D:\NET\NEWCODES\NEWCODES\obj\Release\net8.0-windows\NEWCODES.Vistas.Componetes.FormAprobacion.resources
 D:\NET\NEWCODES\NEWCODES\obj\Release\net8.0-windows\NEWCODES.Vistas.Despositivo.DIspositivosF.resources
 D:\NET\NEWCODES\NEWCODES\obj\Release\net8.0-windows\NEWCODES.Vistas.Eventosform.resources

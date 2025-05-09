@@ -58,6 +58,7 @@
             datagridLocalidad = new DataGridView();
             Column4 = new DataGridViewTextBoxColumn();
             Column5 = new DataGridViewTextBoxColumn();
+            button3 = new Button();
             ExportarCodigos = new Button();
             datagridcoidgos = new DataGridView();
             label9 = new Label();
@@ -357,6 +358,7 @@
             // 
             // splitContainer2.Panel2
             // 
+            splitContainer2.Panel2.Controls.Add(button3);
             splitContainer2.Panel2.Controls.Add(ExportarCodigos);
             splitContainer2.Panel2.Controls.Add(datagridcoidgos);
             splitContainer2.Size = new Size(590, 179);
@@ -383,6 +385,7 @@
             datagridLocalidad.ReadOnly = true;
             datagridLocalidad.Size = new Size(283, 145);
             datagridLocalidad.TabIndex = 0;
+            datagridLocalidad.CellContentClick += datagridLocalidad_CellContentClick;
             // 
             // Column4
             // 
@@ -397,13 +400,23 @@
             Column5.Name = "Column5";
             Column5.ReadOnly = true;
             // 
+            // button3
+            // 
+            button3.Location = new Point(155, 5);
+            button3.Name = "button3";
+            button3.Size = new Size(145, 23);
+            button3.TabIndex = 3;
+            button3.Text = "Agregsr Códigos";
+            button3.UseVisualStyleBackColor = true;
+            button3.Click += button3_Click;
+            // 
             // ExportarCodigos
             // 
             ExportarCodigos.Location = new Point(3, 5);
             ExportarCodigos.Name = "ExportarCodigos";
-            ExportarCodigos.Size = new Size(297, 23);
+            ExportarCodigos.Size = new Size(145, 23);
             ExportarCodigos.TabIndex = 2;
-            ExportarCodigos.Text = "Export Codigos";
+            ExportarCodigos.Text = "Export Códigos";
             ExportarCodigos.UseVisualStyleBackColor = true;
             ExportarCodigos.Click += ExportarCodigos_Click;
             // 
@@ -661,5 +674,6 @@
         private Label label12;
         private Button button2;
         private PictureBox pictureBox1;
+        private Button button3;
     }
 }

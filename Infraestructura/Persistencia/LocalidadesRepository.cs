@@ -65,6 +65,26 @@ namespace NEWCODES.Infraestructura.Persistencia
                 loc.Count = match != null ? match.Count.ToString() : "0";
             }
             _dbContext.SaveChanges();
+            var codigosEscaneadosPorLocalidad = _dbContext.Codigos
+              .Where(c => c.EventoID == eventoId)
+              .GroupBy(c => c.Name)
+              .Select(g => new
+              {
+                  Name = g.Key,
+                  Count = g.Count()
+              }).ToList();
+                
+
+            // Crear nuevo array con datos combinados
+          /*  var resultado = localidades
+                .Select(l => new
+                {
+                    Localidad = l,
+                    CantidadScaneados = codigosEscaneadosPorLocalidad.ContainsKey(l.Name)
+                        ? codigosEscaneadosPorLocalidad[l.Name]
+                        : 0
+                })
+                .ToList();*/
             return localidades;
         }
 

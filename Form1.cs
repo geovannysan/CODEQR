@@ -3,6 +3,7 @@ using MaterialSkin.Controls;
 using NEWCODES.Infraestructura.Persistencia;
 using NEWCODES.Vistas;
 using NEWCODES.Vistas.Codigos;
+using System.Diagnostics;
 
 namespace NEWCODES
 {
@@ -133,12 +134,12 @@ namespace NEWCODES
                     Console.WriteLine(codigos);
                     if (codigos != null)
                     {
-                        EventosIDServer codigos1 = new EventosIDServer(Convert.ToInt32(id));
-                        codigos1.ShowDialog();
+                        AbrirVentana(Convert.ToInt32(id));
+                        
                     }
                     else
                     {
-                        Codigos codigos1 = new Codigos(Convert.ToInt32(id));
+                        CodigosView codigos1 = new CodigosView(Convert.ToInt32(id));
                         codigos1.ShowDialog();
                     }
 
@@ -147,6 +148,38 @@ namespace NEWCODES
                 }
             }
         }
+        // Esto puede ir como campo en Form0 o donde llames a los formularios
+        private Dictionary<int, EventosIDServer> formulariosAbiertos = new Dictionary<int, EventosIDServer>();
+
+        public void AbrirVentana(int id)
+        {
+            if (formulariosAbiertos.ContainsKey(id))
+            {
+                var existente = formulariosAbiertos[id];
+
+                if (!existente.IsDisposed)
+                {
+                    existente.BringToFront();
+                    existente.Focus();
+                    return;
+                }
+                else
+                {
+                    // Si fue cerrado, lo quitamos y permitimos crear uno nuevo
+                    formulariosAbiertos.Remove(id);
+                }
+            }
+
+            // Crear nuevo formulario
+            EventosIDServer nuevo = new EventosIDServer(id);
+            formulariosAbiertos[id] = nuevo;
+
+            // Remover del diccionario al cerrar
+            nuevo.FormClosed += (s, e) => formulariosAbiertos.Remove(id);
+
+            nuevo.Show();
+        }
+
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
             // Cancelar el cierre si querés evitarlo (por ejemplo, desactivar la X)
@@ -155,10 +188,33 @@ namespace NEWCODES
 
             if (result == DialogResult.OK)
             {
+                EliminarReglasFirewallGrupo();
                 e.Cancel = false;
+
 
             }
         }
+        public void EliminarReglasFirewallGrupo()
+        {
+            string comando = $"advfirewall firewall delete rule group=WebSocketApp";
+
+            ProcessStartInfo psi = new ProcessStartInfo("netsh", comando)
+            {
+                Verb = "runas",
+                CreateNoWindow = true,
+                UseShellExecute = true
+            };
+
+            try
+            {
+                Process.Start(psi);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al eliminar las reglas del firewall: " + ex.Message);
+            }
+        }
+
         string dbPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "CodeEvente.db");
         private void button2_Click(object sender, EventArgs e)
         {

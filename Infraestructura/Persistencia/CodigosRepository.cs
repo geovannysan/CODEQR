@@ -55,6 +55,8 @@ namespace NEWCODES.Infraestructura.Persistencia
         }
         public MessageSocket Verifica(string id,string idevent,MessageSocket message)
         {
+            if(message.Codigo == null)
+                return new MessageSocket { Codigo = $"Ingrese un Código ", Type = "Error" };
             var localdiad = _context.Set<Codigos>().AsNoTracking().Where(x => x.Codigo == message.Codigo && x.EventoID == int.Parse( idevent)).Select(x => new{x.Id, x.Codigo,x.Name,x.Precio,x.Estado,x.EventoID,time = DateTime.Now - x.time,x.info}).FirstOrDefault();
             if (localdiad == null)
             {              
@@ -75,22 +77,25 @@ namespace NEWCODES.Infraestructura.Persistencia
                 _context.SaveChanges();
                 return new MessageSocket { Codigo = $"No Autorizado para el escaneo en este Dispositivo", Type = "Error" };
             }
-            if (localdiad.Estado.Equals("Scaneado"))
+            if (localdiad.Estado ==null)
             {
-                 TimeSpan diff = localdiad.time;
-                string formateado = $"{(int)diff.TotalDays} Días, {diff.Hours} HH. {diff.Minutes} min. {diff.Seconds} seg.";
-                Console.WriteLine(formateado);
-                _context.Add(new LogsEventos { Codigo = message.Codigo, Estado = "Repetido", Mensaje = $"Código {message.Codigo} ya fue escaneado", Tipo = "Codigo", time = DateTime.Now, IdEvento = int.Parse(idevent) });
+                var codigo = new Codigos { Id = localdiad.Id };
+                _context.Attach(codigo);
+                codigo.time = DateTime.Now;
+                codigo.Estado = "Scaneado";
+                codigo.info = message.Type;
+                _context.Entry(codigo).Property(x => x.time).IsModified = true;
                 _context.SaveChanges();
-                return new MessageSocket { Codigo = $"Codigo escaneado\n {formateado}", Type = "Error" };
+                return new MessageSocket { Codigo = "Válido", Type = "Success" };
+               
             }
-            var codigo = new Codigos { Id = localdiad.Id };
-            _context.Attach(codigo);
-            codigo.time = DateTime.Now;
-            codigo.Estado = "Scaneado";
-            _context.Entry(codigo).Property(x => x.time).IsModified = true;
+            TimeSpan diff = localdiad.time;
+            string formateado = $"{(int)diff.TotalDays} Días, {diff.Hours} HH. {diff.Minutes} min. {diff.Seconds} seg.";
+            Console.WriteLine(formateado);
+            _context.Add(new LogsEventos { Codigo = message.Codigo, Estado = "Repetido", Mensaje = $"Código {message.Codigo} ya fue escaneado", Tipo = "Codigo", time = DateTime.Now, IdEvento = int.Parse(idevent) });
             _context.SaveChanges();
-            return new MessageSocket { Codigo = $"Válido", Type = "Success" };
+            return new MessageSocket { Codigo = $"Codigo escaneado - {formateado}", Type = "Error" };
+
         }
 
         public MessageSocket VerificaSalida(string id, string idevent, MessageSocket message)
@@ -124,7 +129,7 @@ namespace NEWCODES.Infraestructura.Persistencia
                 Console.WriteLine(formateado);
                 _context.Add(new LogsEventos { Codigo = message.Codigo, Estado = "Sale", Mensaje = $"Código {message.Codigo} Sale", Tipo = "Codigo", time = DateTime.Now, IdEvento = int.Parse(idevent) });
                 _context.SaveChanges();
-                return new MessageSocket { Codigo = $"Codigo Sale\n {formateado}", Type = "Error" };
+                return new MessageSocket { Codigo = $"Codigo ya Escaneado - \n {formateado}", Type = "Error" };
             }
             var codigo = new Codigos { Id = localdiad.Id };
             _context.Attach(codigo);

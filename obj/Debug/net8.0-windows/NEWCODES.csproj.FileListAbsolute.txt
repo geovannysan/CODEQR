@@ -32,6 +32,7 @@ D:\NET\NEWCODES\NEWCODES\bin\Debug\net8.0-windows\Microsoft.Extensions.Logging.A
 D:\NET\NEWCODES\NEWCODES\bin\Debug\net8.0-windows\Microsoft.Extensions.Options.dll
 D:\NET\NEWCODES\NEWCODES\bin\Debug\net8.0-windows\Microsoft.Extensions.Primitives.dll
 D:\NET\NEWCODES\NEWCODES\bin\Debug\net8.0-windows\Mono.TextTemplating.dll
+D:\NET\NEWCODES\NEWCODES\bin\Debug\net8.0-windows\QRCoder.dll
 D:\NET\NEWCODES\NEWCODES\bin\Debug\net8.0-windows\RBush.dll
 D:\NET\NEWCODES\NEWCODES\bin\Debug\net8.0-windows\SixLabors.Fonts.dll
 D:\NET\NEWCODES\NEWCODES\bin\Debug\net8.0-windows\SQLitePCLRaw.batteries_v2.dll
@@ -119,7 +120,7 @@ D:\NET\NEWCODES\NEWCODES\bin\Debug\net8.0-windows\runtimes\win-x86\native\e_sqli
 D:\NET\NEWCODES\NEWCODES\obj\Debug\net8.0-windows\NEWCODES.csproj.AssemblyReference.cache
 D:\NET\NEWCODES\NEWCODES\obj\Debug\net8.0-windows\NEWCODES.Form1.resources
 D:\NET\NEWCODES\NEWCODES\obj\Debug\net8.0-windows\NEWCODES.Properties.Resources.resources
-D:\NET\NEWCODES\NEWCODES\obj\Debug\net8.0-windows\NEWCODES.Vistas.Codigos.Codigos.resources
+D:\NET\NEWCODES\NEWCODES\obj\Debug\net8.0-windows\NEWCODES.Vistas.Codigos.CodigosView.resources
 D:\NET\NEWCODES\NEWCODES\obj\Debug\net8.0-windows\NEWCODES.Vistas.Codigos.Qrcode.resources
 D:\NET\NEWCODES\NEWCODES\obj\Debug\net8.0-windows\NEWCODES.Vistas.Componetes.FormAprobacion.resources
 D:\NET\NEWCODES\NEWCODES\obj\Debug\net8.0-windows\NEWCODES.Vistas.Despositivo.DIspositivosF.resources
@@ -137,4 +138,3 @@ D:\NET\NEWCODES\NEWCODES\obj\Debug\net8.0-windows\refint\NEWCODES.dll
 D:\NET\NEWCODES\NEWCODES\obj\Debug\net8.0-windows\NEWCODES.pdb
 D:\NET\NEWCODES\NEWCODES\obj\Debug\net8.0-windows\NEWCODES.genruntimeconfig.cache
 D:\NET\NEWCODES\NEWCODES\obj\Debug\net8.0-windows\ref\NEWCODES.dll
-D:\NET\NEWCODES\NEWCODES\bin\Debug\net8.0-windows\QRCoder.dll

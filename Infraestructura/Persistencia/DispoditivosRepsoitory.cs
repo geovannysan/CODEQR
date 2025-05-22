@@ -64,7 +64,7 @@ namespace NEWCODES.Infraestructura.Persistencia
         public bool Update(Dispositivos item)
         {
             _context.Dispositivos.Update(item);
-            _context.SaveChanges(true);
+            _context.SaveChanges();
             return true;
         }
 

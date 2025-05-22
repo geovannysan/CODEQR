@@ -552,7 +552,6 @@ D:\NET\NEWCODES\NEWCODES\bin\Release\net8.0-windows\win-x86\zh-Hant\WindowsForms
 D:\NET\NEWCODES\NEWCODES\obj\Release\net8.0-windows\win-x86\NEWCODES.csproj.AssemblyReference.cache
 D:\NET\NEWCODES\NEWCODES\obj\Release\net8.0-windows\win-x86\NEWCODES.Form1.resources
 D:\NET\NEWCODES\NEWCODES\obj\Release\net8.0-windows\win-x86\NEWCODES.Properties.Resources.resources
-D:\NET\NEWCODES\NEWCODES\obj\Release\net8.0-windows\win-x86\NEWCODES.Vistas.Codigos.Codigos.resources
 D:\NET\NEWCODES\NEWCODES\obj\Release\net8.0-windows\win-x86\NEWCODES.Vistas.Componetes.FormAprobacion.resources
 D:\NET\NEWCODES\NEWCODES\obj\Release\net8.0-windows\win-x86\NEWCODES.Vistas.Eventosform.resources
 D:\NET\NEWCODES\NEWCODES\obj\Release\net8.0-windows\win-x86\NEWCODES.Vistas.EventosIDServer.resources
@@ -582,3 +581,4 @@ D:\NET\NEWCODES\NEWCODES\obj\Release\net8.0-windows\win-x86\NEWCODES.application
 D:\NET\NEWCODES\NEWCODES\bin\Release\net8.0-windows\win-x86\MaterialSkin.dll
 D:\NET\NEWCODES\NEWCODES\obj\Release\net8.0-windows\win-x86\NEWCODES.Vistas.Codigos.Qrcode.resources
 D:\NET\NEWCODES\NEWCODES\bin\Release\net8.0-windows\win-x86\QRCoder.dll
+D:\NET\NEWCODES\NEWCODES\obj\Release\net8.0-windows\win-x86\NEWCODES.Vistas.Codigos.CodigosView.resources

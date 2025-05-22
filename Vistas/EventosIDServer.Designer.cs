@@ -49,7 +49,7 @@
             tabPage2 = new TabPage();
             dataDispositi = new DataGridView();
             IDDispo = new DataGridViewTextBoxColumn();
-            Column1 = new DataGridViewTextBoxColumn();
+            Name = new DataGridViewTextBoxColumn();
             Equipogrid = new DataGridViewTextBoxColumn();
             Column3 = new DataGridViewTextBoxColumn();
             tabPage3 = new TabPage();
@@ -58,6 +58,7 @@
             datagridLocalidad = new DataGridView();
             Column4 = new DataGridViewTextBoxColumn();
             Column5 = new DataGridViewTextBoxColumn();
+            Scaneado = new DataGridViewTextBoxColumn();
             button3 = new Button();
             ExportarCodigos = new Button();
             datagridcoidgos = new DataGridView();
@@ -96,7 +97,7 @@
             // 
             // button1
             // 
-            button1.Location = new Point(493, 47);
+            button1.Location = new Point(553, 47);
             button1.Name = "button1";
             button1.Size = new Size(100, 41);
             button1.TabIndex = 0;
@@ -106,7 +107,7 @@
             // 
             // puertoTxt
             // 
-            puertoTxt.Location = new Point(493, 10);
+            puertoTxt.Location = new Point(553, 16);
             puertoTxt.Multiline = true;
             puertoTxt.Name = "puertoTxt";
             puertoTxt.Size = new Size(100, 31);
@@ -115,7 +116,7 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(439, 19);
+            label1.Location = new Point(480, 19);
             label1.Name = "label1";
             label1.Size = new Size(53, 15);
             label1.TabIndex = 2;
@@ -128,7 +129,7 @@
             txtLog.Multiline = true;
             txtLog.Name = "txtLog";
             txtLog.ReadOnly = true;
-            txtLog.Size = new Size(596, 74);
+            txtLog.Size = new Size(665, 74);
             txtLog.TabIndex = 3;
             // 
             // Dispositivos
@@ -140,7 +141,7 @@
             Dispositivos.Location = new Point(12, 179);
             Dispositivos.Name = "Dispositivos";
             Dispositivos.SelectedIndex = 0;
-            Dispositivos.Size = new Size(604, 213);
+            Dispositivos.Size = new Size(673, 213);
             Dispositivos.TabIndex = 4;
             // 
             // tabPage1
@@ -150,7 +151,7 @@
             tabPage1.Location = new Point(4, 24);
             tabPage1.Name = "tabPage1";
             tabPage1.Padding = new Padding(3);
-            tabPage1.Size = new Size(596, 185);
+            tabPage1.Size = new Size(665, 185);
             tabPage1.TabIndex = 0;
             tabPage1.Text = "tabPage1";
             tabPage1.UseVisualStyleBackColor = true;
@@ -287,7 +288,7 @@
             tabPage2.Location = new Point(4, 24);
             tabPage2.Name = "tabPage2";
             tabPage2.Padding = new Padding(3);
-            tabPage2.Size = new Size(596, 185);
+            tabPage2.Size = new Size(665, 185);
             tabPage2.TabIndex = 1;
             tabPage2.Text = "tabPage2";
             tabPage2.UseVisualStyleBackColor = true;
@@ -296,15 +297,14 @@
             // 
             dataDispositi.AllowUserToAddRows = false;
             dataDispositi.AllowUserToDeleteRows = false;
+            dataDispositi.AllowUserToOrderColumns = true;
             dataDispositi.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataDispositi.Columns.AddRange(new DataGridViewColumn[] { IDDispo, Column1, Equipogrid, Column3 });
+            dataDispositi.Columns.AddRange(new DataGridViewColumn[] { IDDispo, Name, Equipogrid, Column3 });
             dataDispositi.Dock = DockStyle.Fill;
-            dataDispositi.EditMode = DataGridViewEditMode.EditProgrammatically;
             dataDispositi.Location = new Point(3, 3);
             dataDispositi.MultiSelect = false;
             dataDispositi.Name = "dataDispositi";
-            dataDispositi.ReadOnly = true;
-            dataDispositi.Size = new Size(590, 179);
+            dataDispositi.Size = new Size(659, 179);
             dataDispositi.TabIndex = 0;
             dataDispositi.CellContentClick += dataDispositi_CellContentClick;
             // 
@@ -312,15 +312,13 @@
             // 
             IDDispo.HeaderText = "ID";
             IDDispo.Name = "IDDispo";
-            IDDispo.ReadOnly = true;
             IDDispo.Visible = false;
             // 
-            // Column1
+            // Name
             // 
-            Column1.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            Column1.HeaderText = "Name";
-            Column1.Name = "Column1";
-            Column1.ReadOnly = true;
+            Name.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            Name.HeaderText = "Name";
+            Name.Name = "Name";
             // 
             // Equipogrid
             // 
@@ -340,7 +338,7 @@
             tabPage3.Location = new Point(4, 24);
             tabPage3.Name = "tabPage3";
             tabPage3.Padding = new Padding(3);
-            tabPage3.Size = new Size(596, 185);
+            tabPage3.Size = new Size(665, 185);
             tabPage3.TabIndex = 2;
             tabPage3.Text = "tabPage3";
             tabPage3.UseVisualStyleBackColor = true;
@@ -361,8 +359,8 @@
             splitContainer2.Panel2.Controls.Add(button3);
             splitContainer2.Panel2.Controls.Add(ExportarCodigos);
             splitContainer2.Panel2.Controls.Add(datagridcoidgos);
-            splitContainer2.Size = new Size(590, 179);
-            splitContainer2.SplitterDistance = 283;
+            splitContainer2.Size = new Size(659, 179);
+            splitContainer2.SplitterDistance = 316;
             splitContainer2.TabIndex = 0;
             // 
             // button2
@@ -371,34 +369,41 @@
             button2.Name = "button2";
             button2.Size = new Size(277, 23);
             button2.TabIndex = 8;
-            button2.Text = "Ageregar Códigos";
+            button2.Text = "Exportar Actividad";
             button2.UseVisualStyleBackColor = true;
+            button2.Visible = false;
             // 
             // datagridLocalidad
             // 
             datagridLocalidad.AllowUserToAddRows = false;
             datagridLocalidad.AllowUserToDeleteRows = false;
             datagridLocalidad.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            datagridLocalidad.Columns.AddRange(new DataGridViewColumn[] { Column4, Column5 });
+            datagridLocalidad.Columns.AddRange(new DataGridViewColumn[] { Column4, Column5, Scaneado });
             datagridLocalidad.Location = new Point(0, 34);
             datagridLocalidad.Name = "datagridLocalidad";
             datagridLocalidad.ReadOnly = true;
-            datagridLocalidad.Size = new Size(283, 145);
+            datagridLocalidad.Size = new Size(313, 145);
             datagridLocalidad.TabIndex = 0;
             datagridLocalidad.CellContentClick += datagridLocalidad_CellContentClick;
             // 
             // Column4
             // 
-            Column4.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             Column4.HeaderText = "Localidad";
             Column4.Name = "Column4";
             Column4.ReadOnly = true;
+            Column4.Width = 90;
             // 
             // Column5
             // 
             Column5.HeaderText = "Cantidad";
             Column5.Name = "Column5";
             Column5.ReadOnly = true;
+            // 
+            // Scaneado
+            // 
+            Scaneado.HeaderText = "Scaneado";
+            Scaneado.Name = "Scaneado";
+            Scaneado.ReadOnly = true;
             // 
             // button3
             // 
@@ -428,7 +433,7 @@
             datagridcoidgos.Location = new Point(3, 34);
             datagridcoidgos.Name = "datagridcoidgos";
             datagridcoidgos.ReadOnly = true;
-            datagridcoidgos.Size = new Size(297, 142);
+            datagridcoidgos.Size = new Size(333, 142);
             datagridcoidgos.TabIndex = 0;
             // 
             // label9
@@ -539,7 +544,7 @@
             groupBox1.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             groupBox1.Location = new Point(16, 79);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(596, 94);
+            groupBox1.Size = new Size(659, 94);
             groupBox1.TabIndex = 6;
             groupBox1.TabStop = false;
             groupBox1.Text = "Server";
@@ -548,7 +553,7 @@
             // pictureBox1
             // 
             pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
-            pictureBox1.Location = new Point(455, 47);
+            pictureBox1.Location = new Point(501, 47);
             pictureBox1.Name = "pictureBox1";
             pictureBox1.Size = new Size(32, 31);
             pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
@@ -595,12 +600,11 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(623, 508);
+            ClientSize = new Size(691, 526);
             Controls.Add(groupBox1);
             Controls.Add(label2);
             Controls.Add(Dispositivos);
             Controls.Add(txtLog);
-            Name = "EventosIDServer";
             StartPosition = FormStartPosition.CenterParent;
             Text = "EventosIDServer";
             Load += EventosIDServer_Load;
@@ -664,16 +668,17 @@
         private Label scanerconetado;
         private DataGridView dataDispositi;
         private DataGridView datagridCliente;
-        private DataGridViewTextBoxColumn Column4;
-        private DataGridViewTextBoxColumn Column5;
-        private DataGridViewTextBoxColumn IDDispo;
-        private DataGridViewTextBoxColumn Column1;
-        private DataGridViewTextBoxColumn Equipogrid;
-        private DataGridViewTextBoxColumn Column3;
         private Label txtRepetidos;
         private Label label12;
         private Button button2;
         private PictureBox pictureBox1;
         private Button button3;
+        private DataGridViewTextBoxColumn Column4;
+        private DataGridViewTextBoxColumn Column5;
+        private DataGridViewTextBoxColumn Scaneado;
+        private DataGridViewTextBoxColumn IDDispo;
+        private DataGridViewTextBoxColumn Name;
+        private DataGridViewTextBoxColumn Equipogrid;
+        private DataGridViewTextBoxColumn Column3;
     }
 }

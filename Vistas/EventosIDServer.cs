@@ -1,6 +1,7 @@
 ﻿using ClosedXML.Excel;
 using Entity;
 using MaterialSkin.Controls;
+using Microsoft.VisualBasic;
 using Microsoft.Win32;
 using NEWCODES.Aplicacion.DTO;
 using NEWCODES.Infraestructura.Persistencia;
@@ -14,7 +15,9 @@ using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Net.WebSockets;
 using System.Text;
+using System.Text.Encodings.Web;
 using System.Text.Json;
+using System.Windows.Forms;
 
 namespace NEWCODES.Vistas
 {
@@ -73,7 +76,7 @@ namespace NEWCODES.Vistas
                     dataDispositi.Columns.Add(btnElimniar);
                     dataDispositi.Columns.Add(btnPermitir);
                 }
-
+                dataDispositi.CellEndEdit += dataDispositi_CellEndEdit;
                 Eventosinfo();
 
             }
@@ -82,6 +85,39 @@ namespace NEWCODES.Vistas
                 MessageBox.Show(ex.Message + "Erorr", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        private void dataDispositi_CellEndEdit(object? sender, DataGridViewCellEventArgs e)
+        {
+            var dgv = sender as DataGridView;
+            var fila = dgv.Rows[e.RowIndex];
+            var columna = dgv.Columns[e.ColumnIndex].Name;
+            //var identifica = dgv.Columns[e.ColumnIndex;
+            // Obtener el nuevo valor
+            var nuevoValor = fila.Cells[e.ColumnIndex].Value?.ToString();
+            var indes = fila.Cells[0].Value?.ToString() ?? string.Empty;
+            // Ejemplo: imprimir o guardar
+            if(nuevoValor == string.Empty) return;
+            DispoditivosRepsoitory dispoditivos = new DispoditivosRepsoitory();
+            var nuevo = new Dispositivos
+            {
+                Id= int.Parse(indes),
+                Name=nuevoValor,
+                IDequipo= fila.Cells[2].Value?.ToString(),
+                Estado = fila.Cells[3].Value?.ToString(),
+                EventoID=_ID
+            };
+            dispoditivos.Update(nuevo);
+            var disp = dispoditivos.Getlist(_ID);
+            this.Invoke(new Action(() =>
+            {
+                dataDispositi.Rows.Clear();
+                foreach (var device in disp)
+                    dataDispositi.Rows.Add(device.Id, device.Name, device.IDequipo, device.Estado);
+                CargarClientesEnGrid();
+            }));
+            //MessageBox.Show(indes + "Erorr", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
         private async void StartWebSocketServer()
         {
             try
@@ -100,7 +136,7 @@ namespace NEWCODES.Vistas
                     button1.BackColor = Color.White;
                     button1.ForeColor = Color.Black;
                     isRunning = false;
-                    _ = Task.Run(() => EliminarPuertoFirewall(Convert.ToInt32(puertoTexto)));
+                     _ = Task.Run(() => EliminarPuertoFirewall(Convert.ToInt32(puertoTexto)));
                     // this.Close();                
                     return;
                 }
@@ -128,17 +164,17 @@ namespace NEWCODES.Vistas
 
                 string ip = GetLocalIPAddress();
 
-                //string prefijo = $"http://127.0.0.1:5425/ws/";
+                //string prefijo = $"http://127.0.0.1:{puerto}/ws/";
 
                 httpListener = new HttpListener();
 
-                string prefijo = $"http://+:{puerto}/ws/";
+                 string prefijo = $"http://+:{puerto}/ws/";
 
                 if (!httpListener.Prefixes.Contains(prefijo))
                 {
                     httpListener.Prefixes.Add(prefijo);
                 }
-                _ = Task.Run(() => AbrirPuertoFirewall(Convert.ToInt32(puerto)));
+                   _ = Task.Run(() => AbrirPuertoFirewall(Convert.ToInt32(puerto)));
                 //_ = Task.Run(=>)  AbrirPuertoFirewall(Convert.ToInt32(puerto));
 
                 httpListener.Start();
@@ -208,7 +244,7 @@ namespace NEWCODES.Vistas
                     }
 
                     string clientId = context.Request.QueryString["clientId"]?.Trim('"') ?? "";
-
+                    string modelo = context.Request.QueryString["name"]?.Trim('"') ?? "";
                     if (string.IsNullOrWhiteSpace(clientId))
                     {
                         AppendLog("❌ Conexión sin clientId.");
@@ -230,11 +266,11 @@ namespace NEWCODES.Vistas
                         connectedClients[clientId].Add(webSocket);
 
                         AppendLog("✅ Conexión WebSocket aceptada.");
-
+                        var dispo = dispoditivos.GetUnic(clientId, _ID);
                         dispoditivos.Update(new Dispositivos
                         {
                             Id = consulta.Id,
-                            Name = consulta.Name,
+                            Name = modelo,
                             IDequipo = consulta.IDequipo,
                             Ip = consulta.Ip,
                             Estado = "Conectado",
@@ -278,9 +314,10 @@ namespace NEWCODES.Vistas
 
                         if (aceptar)
                         {
+                            String cli = clientId.Substring(0, 7);
                             var registro = dispoditivos.Insert(new Dispositivos
                             {
-                                Name = clientId,
+                                Name = modelo,
                                 IDequipo = clientId,
                                 Ip = remoteIP,
                                 Estado = "Conectado",
@@ -368,13 +405,19 @@ namespace NEWCODES.Vistas
                     {
                         string message = Encoding.UTF8.GetString(buffer, 0, result.Count);
                         var datosrecibidos = JsonSerializer.Deserialize<MessageSocket>(message);
-
-                        AppendLog($"📩 [{clientId.IDequipo}] → {datosrecibidos.Type}");
+                        datosrecibidos.Type = clientId.IDequipo;
+                        AppendLog($"📩 Equipo [{clientId.IDequipo}] → Código entrante");
 
                         var verifica = VerificaCodigo(Convert.ToString(clientId.Id), datosrecibidos);
-                        byte[] responseBuffer = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(verifica));
+                        var options = new JsonSerializerOptions
+                        {
+                            Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+                        };
+
+                        byte[] responseBuffer = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(verifica, options));
 
                         await webSocket.SendAsync(new ArraySegment<byte>(responseBuffer), WebSocketMessageType.Text, true, CancellationToken.None);
+
 
                         this.Invoke(new Action(() =>
                         {
@@ -489,11 +532,12 @@ namespace NEWCODES.Vistas
             {
                 dataDispositi.Rows.Add(device.Id, device.Name, device.IDequipo, device.Estado);
             }
+
             var localidad = localidades.GetInfo(Convert.ToString(_ID));
             Console.WriteLine(localidad);
             foreach (var device in localidad)
             {
-                datagridLocalidad.Rows.Add(device.Name, device.Count);
+                datagridLocalidad.Rows.Add(device.Name, device.Count, device.Scaneado);
             }
 
             var codi = codigos.GetList(Convert.ToString(_ID)).Select(x => new { x.Name, x.Codigo, x.Precio, x.info, x.Estado, x.time }).ToList();
@@ -605,7 +649,7 @@ namespace NEWCODES.Vistas
                 lista.Add(new ClienteSocket
                 {
                     Dispositivo = id,
-                    Estado = conexiones.ToString() == "Closed" ? "Desconectado" : "Conectado"
+                    Estado = hayConectado ? "Conectado" : "Desconectado"
                 });
             }
 
@@ -742,6 +786,8 @@ namespace NEWCODES.Vistas
                 }
             }
         }
+
+       
         private void materialFloatingActionButton1_Click(object sender, EventArgs e)
         {
             var qrcodetxt = JsonSerializer.Serialize(new { ip = GetLocalIPAddress(), puertos = puerto });
@@ -784,6 +830,11 @@ namespace NEWCODES.Vistas
         }
 
         private void datagridLocalidad_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void dataDispositi2_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
 
         }

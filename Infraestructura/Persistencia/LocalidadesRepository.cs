@@ -4,6 +4,7 @@ using DocumentFormat.OpenXml.Office2010.Excel;
 using Entity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using NEWCODES.Aplicacion.DTO;
 using NEWCODES.Aplicacion.Presistencia;
 
 namespace NEWCODES.Infraestructura.Persistencia
@@ -40,52 +41,19 @@ namespace NEWCODES.Infraestructura.Persistencia
 
             return resultado;
         }
-        public List<Localidades> GetInfo(string id)
+        public List<LocalidadCountDto> GetInfo(string id)
         {
             int eventoId = int.Parse(id);
-
             var conteoPorNombre = _dbContext.Codigos
                                      .Where(c => c.EventoID == eventoId)
                                      .GroupBy(c => c.Name)
-                                     .Select(g => new
+                                     .Select(g => new LocalidadCountDto
                                      {
                                          Name = g.Key,
-                                         Count = g.Count()
-                                     }).ToList();
-
-            // Ahora traés las localidades del mismo evento
-            var localidades = _dbContext.Localidades
-                .Where(l => l.IdEvento == eventoId)
-                .ToList();
-
-            // Asignar el Count desde el conteo
-            foreach (var loc in localidades)
-            {
-                var match = conteoPorNombre.FirstOrDefault(x => x.Name == loc.Name);
-                loc.Count = match != null ? match.Count.ToString() : "0";
-            }
-            _dbContext.SaveChanges();
-            var codigosEscaneadosPorLocalidad = _dbContext.Codigos
-              .Where(c => c.EventoID == eventoId)
-              .GroupBy(c => c.Name)
-              .Select(g => new
-              {
-                  Name = g.Key,
-                  Count = g.Count()
-              }).ToList();
-                
-
-            // Crear nuevo array con datos combinados
-          /*  var resultado = localidades
-                .Select(l => new
-                {
-                    Localidad = l,
-                    CantidadScaneados = codigosEscaneadosPorLocalidad.ContainsKey(l.Name)
-                        ? codigosEscaneadosPorLocalidad[l.Name]
-                        : 0
-                })
-                .ToList();*/
-            return localidades;
+                                         Count = Convert.ToInt32(g.Count()),
+                                         Scaneado = Convert.ToInt32(g.Count(x => x.Estado == "Scaneado"))
+                                     }).ToList();           
+            return conteoPorNombre;
         }
 
 

@@ -14,6 +14,7 @@ using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Net.WebSockets;
+using System.Security.Principal;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
@@ -21,7 +22,7 @@ using System.Windows.Forms;
 
 namespace NEWCODES.Vistas
 {
-    public partial class EventosIDServer : MaterialForm
+    public partial class EventosIDServer : MaterialSkin.Controls.MaterialForm
     {
         private int _ID;
         private HttpListener httpListener;
@@ -32,10 +33,9 @@ namespace NEWCODES.Vistas
         moduleExcel excelImp = new moduleExcel();
         public EventosIDServer(int id)
         {
+            this.FormBorderStyle = FormBorderStyle.FixedSingle;
             InitializeComponent();
             _ID = id;
-            this.FormBorderStyle = FormBorderStyle.FixedSingle;
-            this.MaximizeBox = false;
             Dispositivos.TabPages[0].Text = "SCANEO";
             Dispositivos.TabPages[1].Text = "DISPOCITIVOS";
             Dispositivos.TabPages[2].Text = "LOCALIDAD";
@@ -174,7 +174,7 @@ namespace NEWCODES.Vistas
                 {
                     httpListener.Prefixes.Add(prefijo);
                 }
-                   _ = Task.Run(() => AbrirPuertoFirewall(Convert.ToInt32(puerto)));
+                   _ = Task.Run(() => AbrirPuertoFirewall(Convert.ToInt32(puertoTexto)));
                 //_ = Task.Run(=>)  AbrirPuertoFirewall(Convert.ToInt32(puerto));
 
                 httpListener.Start();
@@ -265,24 +265,24 @@ namespace NEWCODES.Vistas
 
                         connectedClients[clientId].Add(webSocket);
 
-                        AppendLog("✅ Conexión WebSocket aceptada.");
+                        AppendLog($"✅ Conexión WebSocket aceptada.{clientId} {modelo}");
                         var dispo = dispoditivos.GetUnic(clientId, _ID);
                         dispoditivos.Update(new Dispositivos
                         {
-                            Id = consulta.Id,
-                            Name = modelo,
-                            IDequipo = consulta.IDequipo,
-                            Ip = consulta.Ip,
+                            Id = dispo.Id,
+                            Name = dispo.Name,
+                            IDequipo = dispo.IDequipo,
+                            Ip = dispo.Ip,
                             Estado = "Conectado",
-                            EventoID = consulta.EventoID,
+                            EventoID = dispo.EventoID,
                         });
 
                         var disp = dispoditivos.Getlist(_ID);
                         this.Invoke(new Action(() =>
                         {
                             dataDispositi.Rows.Clear();
-                            foreach (var device in disp)
-                                dataDispositi.Rows.Add(device.Id, device.Name, device.IDequipo, device.Estado);
+                            //foreach (var device in disp)
+                            //    dataDispositi.Rows.Add(device.Id, device.Name, device.IDequipo, device.Estado);
                             CargarClientesEnGrid();
                         }));
 
@@ -300,7 +300,7 @@ namespace NEWCODES.Vistas
 
                             this.Invoke(new MethodInvoker(() =>
                             {
-                                using (var form = new FormAprobacion(clientId))
+                                using (var form = new FormAprobacion(clientId, modelo))
                                 {
                                     form.ShowDialog();
                                     aprobado = form.Aprobado;
@@ -311,7 +311,7 @@ namespace NEWCODES.Vistas
                         });
 
                         bool aceptar = await solicitudAprobacion;
-
+                        AppendLog("✅ Conexión entrante (nuevo cliente).");
                         if (aceptar)
                         {
                             String cli = clientId.Substring(0, 7);
@@ -331,8 +331,8 @@ namespace NEWCODES.Vistas
 
                             connectedClients[clientId].Add(webSocket);
 
-                            AppendLog("✅ Conexión WebSocket aceptada (nuevo cliente).");
-
+                           // AppendLog("✅ Conexión WebSocket aceptada .");
+                            AppendLog($"✅ Conexión WebSocket aceptada.{clientId} {modelo}");
                             var disp = dispoditivos.Getlist(_ID);
                             this.Invoke(new Action(() =>
                             {
@@ -363,10 +363,14 @@ namespace NEWCODES.Vistas
 
         public void AbrirPuertoFirewall(int puerto)
         {
-            string nombreRegla = $"Regla WebSocket Puerto {puerto}";
-            string grupoReglas = "WebSocketApp";
-            string comando = $"advfirewall firewall add rule name=\"{nombreRegla}\" dir=in action=allow protocol=TCP localport={puerto} group=\"{grupoReglas}\"";
+            if (!EsAdministrador())
+            {
+                MessageBox.Show("Debe ejecutar la aplicación como administrador para modificar el firewall.");
+                return;
+            }
 
+            string nombreRegla = $"Regla WebSocket Puerto {puerto}";
+            string comando = $"advfirewall firewall add rule name=\"{nombreRegla}\" dir=in action=allow protocol=TCP localport={puerto}";
 
             ProcessStartInfo psi = new ProcessStartInfo("netsh", comando)
             {
@@ -382,6 +386,43 @@ namespace NEWCODES.Vistas
             catch (Exception ex)
             {
                 MessageBox.Show("Error al crear la regla del firewall: " + ex.Message);
+            }
+        }
+
+        static bool EsAdministrador()
+        {
+            using (WindowsIdentity identity = WindowsIdentity.GetCurrent())
+            {
+                WindowsPrincipal principal = new WindowsPrincipal(identity);
+                return principal.IsInRole(WindowsBuiltInRole.Administrator);
+            }
+        }
+
+
+        public void EliminarPuertoFirewall(int puertos)
+        {
+            if (!EsAdministrador())
+            {
+                MessageBox.Show("Debe ejecutar la aplicación como administrador para modificar el firewall.");
+                return;
+            }
+            string nombreRegla = $"Regla WebSocket Puerto {puertos}";
+            string comando = $"advfirewall firewall delete rule name=\"{nombreRegla}\" protocol=TCP localport={puertos}";
+
+            ProcessStartInfo psi = new ProcessStartInfo("netsh", comando)
+            {
+                Verb = "runas",
+                CreateNoWindow = true,
+                UseShellExecute = true
+            };
+
+            try
+            {
+                Process.Start(psi);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al eliminar la regla del firewall: " + ex.Message);
             }
         }
 
@@ -440,10 +481,11 @@ namespace NEWCODES.Vistas
                 {
                     // Actualiza estado en DB
                     DispoditivosRepsoitory dispoditivo = new DispoditivosRepsoitory();
+                    var cliente = dispoditivo.GetUnic(clientId.IDequipo, clientId.EventoID);
                     var dispo = new Dispositivos
                     {
                         Id = clientId.Id,
-                        Name = clientId.Name,
+                        Name = cliente.Name,
                         IDequipo = clientId.IDequipo,
                         Ip = clientId.Ip,
                         Estado = "Desconectado",
@@ -485,27 +527,7 @@ namespace NEWCODES.Vistas
                 }
             }
         }
-        public void EliminarPuertoFirewall(int puerto)
-        {
-            string nombreRegla = $"Regla WebSocket Puerto {puerto}";
-            string comando = $"advfirewall firewall delete rule name=\"{nombreRegla}\" protocol=TCP localport={puerto}";
-
-            ProcessStartInfo psi = new ProcessStartInfo("netsh", comando)
-            {
-                Verb = "runas", // Ejecutar como administrador
-                CreateNoWindow = true,
-                UseShellExecute = true
-            };
-
-            try
-            {
-                Process.Start(psi);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error al eliminar la regla del firewall: " + ex.Message);
-            }
-        }
+       
         private MessageSocket VerificaCodigo(string cliente, MessageSocket message)
         {
             CodigosRepository codigos = new CodigosRepository();
@@ -658,11 +680,17 @@ namespace NEWCODES.Vistas
             scanerconetado.Text = dat.Count.ToString();
             CodigosRepository codigos = new CodigosRepository();
             LogsEvenRepository LogsEven = new LogsEvenRepository();
+            DispoditivosRepsoitory dispoditivos = new DispoditivosRepsoitory();
             var codi = codigos.GetList(Convert.ToString(_ID)).Select(x => new { x.Name, x.Codigo, x.Precio, x.info, x.Estado, x.time }).ToList();
             var logs = LogsEven.ObtenerLista(_ID);
+            var disp = dispoditivos.Getlist(_ID);
             txtValidos.Text = codi.Where(x => x.Estado == "Scaneado").ToList().Count().ToString();
             txtRechazados.Text = logs.Where(x => x.Estado.Equals("Rechazado")).ToList().Count().ToString();
             txtRepetidos.Text = logs.Where(x => x.Estado.Equals("Repetido")).ToList().Count().ToString();
+
+            dataDispositi.Rows.Clear();
+            foreach (var device in disp)
+                dataDispositi.Rows.Add(device.Id, device.Name, device.IDequipo, device.Estado);
 
         }
 

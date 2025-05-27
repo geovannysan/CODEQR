@@ -1,4 +1,5 @@
 D:\NET\NEWCODES\NEWCODES\bin\Release\net8.0-windows\NEWCODES.exe
+D:\NET\NEWCODES\NEWCODES\bin\Release\net8.0-windows\NEWCODES.dll.config
 D:\NET\NEWCODES\NEWCODES\bin\Release\net8.0-windows\NEWCODES.deps.json
 D:\NET\NEWCODES\NEWCODES\bin\Release\net8.0-windows\NEWCODES.runtimeconfig.json
 D:\NET\NEWCODES\NEWCODES\bin\Release\net8.0-windows\NEWCODES.dll
@@ -138,3 +139,6 @@ D:\NET\NEWCODES\NEWCODES\obj\Release\net8.0-windows\refint\NEWCODES.dll
 D:\NET\NEWCODES\NEWCODES\obj\Release\net8.0-windows\NEWCODES.pdb
 D:\NET\NEWCODES\NEWCODES\obj\Release\net8.0-windows\NEWCODES.genruntimeconfig.cache
 D:\NET\NEWCODES\NEWCODES\obj\Release\net8.0-windows\ref\NEWCODES.dll
+D:\NET\NEWCODES\NEWCODES\bin\Release\net8.0-windows\System.ServiceProcess.ServiceController.dll
+D:\NET\NEWCODES\NEWCODES\bin\Release\net8.0-windows\WindowsFirewallHelper.dll
+D:\NET\NEWCODES\NEWCODES\bin\Release\net8.0-windows\runtimes\win\lib\netstandard2.0\System.ServiceProcess.ServiceController.dll

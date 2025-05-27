@@ -9,13 +9,13 @@ namespace NEWCODES.Vistas.Componetes
         public bool Aprobado { get; private set; } = false;
         private System.Windows.Forms.Timer timer;
 
-        public FormAprobacion(string clientId)
+        public FormAprobacion(string clientId,string nombre)
         {
             InitializeComponent();
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             progressBar.Value = 10;
-            lblMensaje.Text = $"Nueva conexión desde ID: {clientId}";
+            lblMensaje.Text = $"Nueva conexión desde ID: {nombre}";
             lblTiempo.Text = $"Tiempo restante: {tiempoRestante} s";
 
             timer = new System.Windows.Forms.Timer();

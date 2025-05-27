@@ -129,7 +129,7 @@
             txtLog.Multiline = true;
             txtLog.Name = "txtLog";
             txtLog.ReadOnly = true;
-            txtLog.Size = new Size(665, 74);
+            txtLog.Size = new Size(668, 76);
             txtLog.TabIndex = 3;
             // 
             // Dispositivos
@@ -605,6 +605,7 @@
             Controls.Add(label2);
             Controls.Add(Dispositivos);
             Controls.Add(txtLog);
+            //Name = "EventosIDServer";
             StartPosition = FormStartPosition.CenterParent;
             Text = "EventosIDServer";
             Load += EventosIDServer_Load;
@@ -635,7 +636,6 @@
         private Button button1;
         private TextBox puertoTxt;
         private Label label1;
-        private TextBox txtLog;
         private TabControl Dispositivos;
         private TabPage tabPage1;
         private TabPage tabPage2;
@@ -680,5 +680,6 @@
         private DataGridViewTextBoxColumn Name;
         private DataGridViewTextBoxColumn Equipogrid;
         private DataGridViewTextBoxColumn Column3;
+        public TextBox txtLog;
     }
 }

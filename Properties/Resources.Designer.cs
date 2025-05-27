@@ -59,5 +59,15 @@ namespace NEWCODES.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Byte[].
+        /// </summary>
+        internal static byte[] failed {
+            get {
+                object obj = ResourceManager.GetObject("failed", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
     }
 }

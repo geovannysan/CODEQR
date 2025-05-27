@@ -1,4 +1,5 @@
 D:\NET\NEWCODES\NEWCODES\bin\Debug\net8.0-windows\NEWCODES.exe
+D:\NET\NEWCODES\NEWCODES\bin\Debug\net8.0-windows\NEWCODES.dll.config
 D:\NET\NEWCODES\NEWCODES\bin\Debug\net8.0-windows\NEWCODES.deps.json
 D:\NET\NEWCODES\NEWCODES\bin\Debug\net8.0-windows\NEWCODES.runtimeconfig.json
 D:\NET\NEWCODES\NEWCODES\bin\Debug\net8.0-windows\NEWCODES.dll

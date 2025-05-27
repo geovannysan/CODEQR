@@ -87,7 +87,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(398, 293);
+            ClientSize = new Size(386, 246);
             Controls.Add(lblMensaje);
             Controls.Add(lblTiempo);
             Controls.Add(progressBar);

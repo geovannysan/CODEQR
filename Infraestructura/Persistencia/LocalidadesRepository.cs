@@ -76,5 +76,10 @@ namespace NEWCODES.Infraestructura.Persistencia
         {
             throw new NotImplementedException();
         }
+
+        Localidades IGenery<Localidades>.Update(Localidades item)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

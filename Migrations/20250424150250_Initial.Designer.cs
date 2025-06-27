@@ -41,7 +41,7 @@ namespace NEWCODES.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Precio")
+                    b.Property<string>("Asiento")
                         .IsRequired()
                         .HasColumnType("TEXT");
 

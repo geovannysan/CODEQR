@@ -94,7 +94,7 @@ namespace NEWCODES.Vistas.Despositivo
                 }
             }
             CargaLocalid();
-            MessageBox.Show("PErmisos Actualizados");
+            MessageBox.Show("Permisos Actualizados");
             this.Close();
 
 

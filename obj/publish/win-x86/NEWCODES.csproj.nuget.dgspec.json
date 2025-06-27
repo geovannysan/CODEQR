@@ -91,6 +91,10 @@
             "QRCoder": {
               "target": "Package",
               "version": "[1.6.0, )"
+            },
+            "WindowsFirewallHelper": {
+              "target": "Package",
+              "version": "[2.2.0.86, )"
             }
           },
           "imports": [

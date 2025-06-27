@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Aplicacion.Persistencia;
+using Microsoft.EntityFrameworkCore;
 using NEWCODES.Aplicacion.Presistencia;
 using NEWCODES.Domain.Entity;
 
@@ -38,6 +39,11 @@ namespace NEWCODES.Infraestructura.Persistencia
         }
 
         public bool Update(LogsEventos item)
+        {
+            throw new NotImplementedException();
+        }
+
+        LogsEventos IGenery<LogsEventos>.Update(LogsEventos item)
         {
             throw new NotImplementedException();
         }

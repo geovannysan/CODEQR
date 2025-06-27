@@ -12,7 +12,7 @@ namespace Aplicacion.Persistencia
        List<T> Get();
 
        T Insert(T item,int id=0);
-       bool Update(T item);
+       T Update(T item);
        bool Delete(string id);
        bool InsertLogs(T item);
 

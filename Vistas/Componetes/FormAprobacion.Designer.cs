@@ -56,22 +56,26 @@
             // 
             // btnAceptar
             // 
+            btnAceptar.BackColor = Color.LimeGreen;
+            btnAceptar.ForeColor = SystemColors.ButtonHighlight;
             btnAceptar.Location = new Point(48, 174);
             btnAceptar.Name = "btnAceptar";
             btnAceptar.Size = new Size(75, 23);
             btnAceptar.TabIndex = 2;
             btnAceptar.Text = "Aceptar";
-            btnAceptar.UseVisualStyleBackColor = true;
+            btnAceptar.UseVisualStyleBackColor = false;
             btnAceptar.Click += btnAceptar_Click_1;
             // 
             // btnRechazar
             // 
+            btnRechazar.BackColor = Color.Red;
+            btnRechazar.ForeColor = SystemColors.ButtonHighlight;
             btnRechazar.Location = new Point(260, 174);
             btnRechazar.Name = "btnRechazar";
             btnRechazar.Size = new Size(75, 23);
             btnRechazar.TabIndex = 3;
             btnRechazar.Text = "Rechazar";
-            btnRechazar.UseVisualStyleBackColor = true;
+            btnRechazar.UseVisualStyleBackColor = false;
             btnRechazar.Click += btnRechazar_Click;
             // 
             // progressBar
@@ -87,7 +91,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(386, 246);
+            ClientSize = new Size(382, 225);
             Controls.Add(lblMensaje);
             Controls.Add(lblTiempo);
             Controls.Add(progressBar);

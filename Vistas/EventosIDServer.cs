@@ -9,6 +9,7 @@ using NEWCODES.Infraestructura.Utils;
 using NEWCODES.Vistas.Codigos;
 using NEWCODES.Vistas.Componetes;
 using NEWCODES.Vistas.Despositivo;
+using System.Data;
 using System.Diagnostics;
 using System.Net;
 using System.Net.NetworkInformation;
@@ -88,33 +89,40 @@ namespace NEWCODES.Vistas
 
         private void dataDispositi_CellEndEdit(object? sender, DataGridViewCellEventArgs e)
         {
-            var dgv = sender as DataGridView;
-            var fila = dgv.Rows[e.RowIndex];
-            var columna = dgv.Columns[e.ColumnIndex].Name;
-            //var identifica = dgv.Columns[e.ColumnIndex;
-            // Obtener el nuevo valor
-            var nuevoValor = fila.Cells[e.ColumnIndex].Value?.ToString();
-            var indes = fila.Cells[0].Value?.ToString() ?? string.Empty;
-            // Ejemplo: imprimir o guardar
-            if(nuevoValor == string.Empty) return;
-            DispoditivosRepsoitory dispoditivos = new DispoditivosRepsoitory();
-            var nuevo = new Dispositivos
+            try
             {
-                Id= int.Parse(indes),
-                Name=nuevoValor,
-                IDequipo= fila.Cells[2].Value?.ToString(),
-                Estado = fila.Cells[3].Value?.ToString(),
-                EventoID=_ID
-            };
-            dispoditivos.Update(nuevo);
-            var disp = dispoditivos.Getlist(_ID);
-            this.Invoke(new Action(() =>
+                var dgv = sender as DataGridView;
+                var fila = dgv.Rows[e.RowIndex];
+                var columna = dgv.Columns[e.ColumnIndex].Name;
+                //var identifica = dgv.Columns[e.ColumnIndex;
+                // Obtener el nuevo valor
+                var nuevoValor = fila.Cells[e.ColumnIndex].Value?.ToString();
+                var indes = fila.Cells[0].Value?.ToString() ?? string.Empty;
+                // Ejemplo: imprimir o guardar
+                if (nuevoValor == string.Empty) return;
+                DispoditivosRepsoitory dispoditivos = new DispoditivosRepsoitory();
+                var nuevo = new Dispositivos
+                {
+                    Id = int.Parse(indes),
+                    Name = nuevoValor,
+                    IDequipo = fila.Cells[2].Value?.ToString(),
+                    Estado = fila.Cells[3].Value?.ToString(),
+                    EventoID = _ID
+                };
+                dispoditivos.Update(nuevo);
+                var disp = dispoditivos.Getlist(_ID);
+                this.Invoke(new Action(() =>
+                {
+                    dataDispositi.Rows.Clear();
+                    foreach (var device in disp)
+                        dataDispositi.Rows.Add(device.Id, device.Name, device.IDequipo, device.Estado);
+                    CargarClientesEnGrid();
+                }));
+            }
+            catch (Exception ex)
             {
-                dataDispositi.Rows.Clear();
-                foreach (var device in disp)
-                    dataDispositi.Rows.Add(device.Id, device.Name, device.IDequipo, device.Estado);
-                CargarClientesEnGrid();
-            }));
+
+            }
             //MessageBox.Show(indes + "Erorr", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
@@ -136,7 +144,7 @@ namespace NEWCODES.Vistas
                     button1.BackColor = Color.White;
                     button1.ForeColor = Color.Black;
                     isRunning = false;
-                     _ = Task.Run(() => EliminarPuertoFirewall(Convert.ToInt32(puertoTexto)));
+                    _ = Task.Run(() => EliminarPuertoFirewall(Convert.ToInt32(puertoTexto)));
                     // this.Close();                
                     return;
                 }
@@ -168,13 +176,13 @@ namespace NEWCODES.Vistas
 
                 httpListener = new HttpListener();
 
-                 string prefijo = $"http://+:{puerto}/ws/";
+                string prefijo = $"http://+:{puerto}/ws/";
 
                 if (!httpListener.Prefixes.Contains(prefijo))
                 {
                     httpListener.Prefixes.Add(prefijo);
                 }
-                   _ = Task.Run(() => AbrirPuertoFirewall(Convert.ToInt32(puertoTexto)));
+                _ = Task.Run(() => AbrirPuertoFirewall(Convert.ToInt32(puertoTexto)));
                 //_ = Task.Run(=>)  AbrirPuertoFirewall(Convert.ToInt32(puerto));
 
                 httpListener.Start();
@@ -221,11 +229,6 @@ namespace NEWCODES.Vistas
             }
         }
 
-        /* escucha Conexion Socket
-         *
-         */
-
-        //private Dictionary<string, WebSocket> connectedClients = new Dictionary<string, WebSocket>();
         private Dictionary<string, List<WebSocket>> connectedClients = new Dictionary<string, List<WebSocket>>();
         private async void ListenForWebSocketConnections()
         {
@@ -293,8 +296,44 @@ namespace NEWCODES.Vistas
                         // Cliente no registrado
                         string remoteIP = context.Request.RemoteEndPoint?.ToString() ?? "Desconocido";
 
+                        
                         // Mostrar el formulario de aprobación en un hilo aparte para evitar bloqueo
-                        Task<bool> solicitudAprobacion = Task.Run(() =>
+                        if (materialCheckbox2.Checked)
+                        {
+                                String cli = clientId.Substring(0, 7);
+                                var registro = dispoditivos.Insert(new Dispositivos
+                                {
+                                    Name = modelo,
+                                    IDequipo = clientId,
+                                    Ip = remoteIP,
+                                    Estado = "Conectado",
+                                    EventoID = _ID,
+                                }, _ID);
+
+                                WebSocket webSocket = (await context.AcceptWebSocketAsync(null)).WebSocket;
+
+                                if (!connectedClients.ContainsKey(clientId))
+                                    connectedClients[clientId] = new List<WebSocket>();
+
+                                connectedClients[clientId].Add(webSocket);
+
+                                // AppendLog("✅ Conexión WebSocket aceptada .");
+                                AppendLog($"✅ Conexión WebSocket aceptada.{clientId} {modelo}");
+                                var disp = dispoditivos.Getlist(_ID);
+                                this.Invoke(new Action(() =>
+                                {
+                                    dataDispositi.Rows.Clear();
+                                    foreach (var device in disp)
+                                        dataDispositi.Rows.Add(device.Id, device.Name, device.IDequipo, device.Estado);
+                                    CargarClientesEnGrid();
+                                }));
+
+                                _ = Task.Run(() => HandleWebSocketMessages(registro, webSocket));
+                            
+
+                        }
+                        if (!materialCheckbox2.Checked) 
+                        {    Task<bool> solicitudAprobacion = Task.Run(() =>
                         {
                             bool aprobado = false;
 
@@ -302,6 +341,9 @@ namespace NEWCODES.Vistas
                             {
                                 using (var form = new FormAprobacion(clientId, modelo))
                                 {
+                                    form.StartPosition = FormStartPosition.CenterScreen; // Centrado
+                                    form.TopMost = true; // Siempre al frente
+                                    System.Media.SystemSounds.Exclamation.Play(); // Sonido
                                     form.ShowDialog();
                                     aprobado = form.Aprobado;
                                 }
@@ -310,46 +352,49 @@ namespace NEWCODES.Vistas
                             return aprobado;
                         });
 
-                        bool aceptar = await solicitudAprobacion;
-                        AppendLog("✅ Conexión entrante (nuevo cliente).");
-                        if (aceptar)
-                        {
-                            String cli = clientId.Substring(0, 7);
-                            var registro = dispoditivos.Insert(new Dispositivos
+                            bool aceptar = await solicitudAprobacion;
+                            AppendLog("✅ Conexión entrante (nuevo cliente).");
+                            if (aceptar)
                             {
-                                Name = modelo,
-                                IDequipo = clientId,
-                                Ip = remoteIP,
-                                Estado = "Conectado",
-                                EventoID = _ID,
-                            }, _ID);
+                                String cli = clientId.Substring(0, 7);
+                                var registro = dispoditivos.Insert(new Dispositivos
+                                {
+                                    Name = modelo,
+                                    IDequipo = clientId,
+                                    Ip = remoteIP,
+                                    Estado = "Conectado",
+                                    EventoID = _ID,
+                                }, _ID);
 
-                            WebSocket webSocket = (await context.AcceptWebSocketAsync(null)).WebSocket;
+                                WebSocket webSocket = (await context.AcceptWebSocketAsync(null)).WebSocket;
 
-                            if (!connectedClients.ContainsKey(clientId))
-                                connectedClients[clientId] = new List<WebSocket>();
+                                if (!connectedClients.ContainsKey(clientId))
+                                    connectedClients[clientId] = new List<WebSocket>();
 
-                            connectedClients[clientId].Add(webSocket);
+                                connectedClients[clientId].Add(webSocket);
 
-                           // AppendLog("✅ Conexión WebSocket aceptada .");
-                            AppendLog($"✅ Conexión WebSocket aceptada.{clientId} {modelo}");
-                            var disp = dispoditivos.Getlist(_ID);
-                            this.Invoke(new Action(() =>
+                                // AppendLog("✅ Conexión WebSocket aceptada .");
+                                AppendLog($"✅ Conexión WebSocket aceptada.{clientId} {modelo}");
+                                var disp = dispoditivos.Getlist(_ID);
+                                this.Invoke(new Action(() =>
+                                {
+                                    dataDispositi.Rows.Clear();
+                                    foreach (var device in disp)
+                                        dataDispositi.Rows.Add(device.Id, device.Name, device.IDequipo, device.Estado);
+                                    CargarClientesEnGrid();
+                                }));
+
+                                _ = Task.Run(() => HandleWebSocketMessages(registro, webSocket));
+                            }
+                            else
                             {
-                                dataDispositi.Rows.Clear();
-                                foreach (var device in disp)
-                                    dataDispositi.Rows.Add(device.Id, device.Name, device.IDequipo, device.Estado);
-                                CargarClientesEnGrid();
-                            }));
+                                AppendLog("❌ Conexión rechazada.");
+                                context.Response.StatusCode = 403;
+                                context.Response.Close();
+                            }
 
-                            _ = Task.Run(() => HandleWebSocketMessages(registro, webSocket));
                         }
-                        else
-                        {
-                            AppendLog("❌ Conexión rechazada.");
-                            context.Response.StatusCode = 403;
-                            context.Response.Close();
-                        }
+                      
                     }
                 }
                 catch (Exception ex)
@@ -527,7 +572,7 @@ namespace NEWCODES.Vistas
                 }
             }
         }
-       
+
         private MessageSocket VerificaCodigo(string cliente, MessageSocket message)
         {
             CodigosRepository codigos = new CodigosRepository();
@@ -543,6 +588,7 @@ namespace NEWCODES.Vistas
             EventosRepository eventosRepository = new EventosRepository();
             var dato = eventosRepository.Get(Convert.ToString(_ID));
             txtEvento.Text = dato.Nombre;
+            materialCheckbox1.Checked = (dato.SelecionLocation==1);
             DispoditivosRepsoitory dispoditivos = new DispoditivosRepsoitory();
             LocalidadesRepository localidades = new LocalidadesRepository();
             CodigosRepository codigos = new CodigosRepository();
@@ -562,7 +608,7 @@ namespace NEWCODES.Vistas
                 datagridLocalidad.Rows.Add(device.Name, device.Count, device.Scaneado);
             }
 
-            var codi = codigos.GetList(Convert.ToString(_ID)).Select(x => new { x.Name, x.Codigo, x.Precio, x.info, x.Estado, x.time }).ToList();
+            var codi = codigos.GetList(Convert.ToString(_ID)).Select(x => new { x.Name, x.Codigo, x.Asiento, x.info, x.Estado, x.time }).ToList();
             var logs = LogsEven.ObtenerLista(_ID);
             txtValidos.Text = codi.Where(x => x.Estado == "Scaneado").ToList().Count().ToString();
             txtRechazados.Text = logs.Where(x => x.Estado.Equals("Rechazado")).ToList().Count().ToString();
@@ -681,7 +727,7 @@ namespace NEWCODES.Vistas
             CodigosRepository codigos = new CodigosRepository();
             LogsEvenRepository LogsEven = new LogsEvenRepository();
             DispoditivosRepsoitory dispoditivos = new DispoditivosRepsoitory();
-            var codi = codigos.GetList(Convert.ToString(_ID)).Select(x => new { x.Name, x.Codigo, x.Precio, x.info, x.Estado, x.time }).ToList();
+            var codi = codigos.GetList(Convert.ToString(_ID)).Select(x => new { x.Name, x.Codigo, x.Asiento, x.info, x.Estado, x.time }).ToList();
             var logs = LogsEven.ObtenerLista(_ID);
             var disp = dispoditivos.Getlist(_ID);
             txtValidos.Text = codi.Where(x => x.Estado == "Scaneado").ToList().Count().ToString();
@@ -731,7 +777,7 @@ namespace NEWCODES.Vistas
                         }
                         catch (Exception ex)
                         {
-                            // Log opcional
+                            //
                             AppendLog($"Error al cerrar conexión WebSocket: {ex.Message}");
                         }
                     }
@@ -739,25 +785,11 @@ namespace NEWCODES.Vistas
 
                 // Limpiar conexiones cerradas
                 sockets.RemoveAll(ws => ws.State != WebSocketState.Open);
-
-                // Si ya no queda ninguna, quitar el cliente del diccionario
                 if (sockets.Count == 0)
                 {
                     connectedClients.Remove(clientId);
                 }
             }
-            /*if (connectedClients.TryGetValue(clientId, out WebSocket socket))
-            {
-                if (socket.State == WebSocketState.Open || socket.State == WebSocketState.CloseReceived)
-                {
-                    await socket.CloseAsync(
-                        WebSocketCloseStatus.NormalClosure,
-                        "Desconexión solicitada",
-                        CancellationToken.None
-                    );
-                }
-                connectedClients.Remove(clientId);
-            }*/
         }
         private void ExportarCodigos_Click(object sender, EventArgs e)
         {
@@ -815,7 +847,7 @@ namespace NEWCODES.Vistas
             }
         }
 
-       
+
         private void materialFloatingActionButton1_Click(object sender, EventArgs e)
         {
             var qrcodetxt = JsonSerializer.Serialize(new { ip = GetLocalIPAddress(), puertos = puerto });
@@ -865,6 +897,63 @@ namespace NEWCODES.Vistas
         private void dataDispositi2_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
 
+        }
+
+        private void datagridcoidgos_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+        private void ActualizarGrid(List<Dispositivos> lista)
+        {
+            dataDispositi.Rows.Clear();
+            foreach (var device in lista)
+            {
+                dataDispositi.Rows.Add(device.Id, device.Name, device.IDequipo, device.Estado);
+            }
+        }
+        private void txtBuscar_TextChanged(object sender, EventArgs e)
+        {
+            DispoditivosRepsoitory dispoditivos = new DispoditivosRepsoitory();
+            var disp = dispoditivos.Getlist(_ID);
+            string texto = txtBuscar.Text.Trim().ToLower();
+            var filtrados = disp
+                .Where(d => d.Name.ToLower().Contains(texto) || d.IDequipo.ToLower().Contains(texto))
+                .ToList();
+            ActualizarGrid(filtrados);
+        }
+
+        private void materialCheckbox1_CheckedChanged(object sender, EventArgs e)
+        {
+
+            EventosRepository eventosRepository = new EventosRepository();
+            var dato = eventosRepository.Get(Convert.ToString(_ID));
+            if (materialCheckbox1.Checked)
+            {
+                eventosRepository.Update(new Eventos
+                {
+                    Id = _ID,
+                    Description = dato.Description,
+                    Nombre = dato.Nombre,
+                    Fecha = dato.Fecha,
+                    SelecionLocation = materialCheckbox1.Checked?1 : 0,
+                });
+
+                // Está activado
+               // MessageBox.Show("CheckBox marcado");
+            }
+            else
+            {
+                eventosRepository.Update(new Eventos
+                {
+                    Id = _ID,
+                    Description = dato.Description,
+                    Nombre = dato.Nombre,
+                    Fecha = dato.Fecha,
+                    SelecionLocation = materialCheckbox1.Checked ? 1 : 0,
+                });
+                // Está desactivado
+                //MessageBox.Show("CheckBox desmarcado");
+            }
         }
     }
 }

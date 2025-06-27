@@ -23,27 +23,22 @@ namespace NEWCODES.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("Asiento")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Codigo")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Estado")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("EventoID")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Precio")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("info")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("time")
@@ -169,22 +164,18 @@ namespace NEWCODES.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Codigo")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Estado")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("IdEvento")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Mensaje")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Tipo")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("time")

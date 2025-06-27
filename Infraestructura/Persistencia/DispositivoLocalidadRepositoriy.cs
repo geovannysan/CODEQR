@@ -1,4 +1,5 @@
-﻿using Entity;
+﻿using Aplicacion.Persistencia;
+using Entity;
 using NEWCODES.Aplicacion.Presistencia;
 
 namespace NEWCODES.Infraestructura.Persistencia
@@ -38,6 +39,11 @@ namespace NEWCODES.Infraestructura.Persistencia
         }
 
         public bool Update(DispositivoLocation item)
+        {
+            throw new NotImplementedException();
+        }
+
+        DispositivoLocation IGenery<DispositivoLocation>.Update(DispositivoLocation item)
         {
             throw new NotImplementedException();
         }

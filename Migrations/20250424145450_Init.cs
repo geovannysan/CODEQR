@@ -35,7 +35,7 @@ namespace NEWCODES.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(type: "TEXT", nullable: false),
                     Codigo = table.Column<string>(type: "TEXT", nullable: false),
-                    Precio = table.Column<string>(type: "TEXT", nullable: false),
+                    Asiento = table.Column<string>(type: "TEXT", nullable: false),
                     info = table.Column<string>(type: "TEXT", nullable: false),
                     Estado = table.Column<string>(type: "TEXT", nullable: false),
                     time = table.Column<DateTime>(type: "TEXT", nullable: false),

@@ -10,7 +10,7 @@ namespace Entity
         public int Id { get; set; }
         public string? Name { get; set; }
         public string? Codigo { get; set; }
-        public string? Precio { get; set; }
+        public string? Asiento { get; set; }
         public string? info { get; set; } 
         public string? Estado { get; set; } 
         public DateTime time { get; set; }

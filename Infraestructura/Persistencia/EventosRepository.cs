@@ -1,4 +1,5 @@
 ﻿using Aplicacion.Persistencia;
+using DocumentFormat.OpenXml.Office2010.Excel;
 using Entity;
 using Microsoft.EntityFrameworkCore;
 
@@ -65,9 +66,11 @@ namespace NEWCODES.Infraestructura.Persistencia
             throw new NotImplementedException();
         }
 
-        public bool Update(Eventos item)
+        public Eventos Update(Eventos item)
         {
-            throw new NotImplementedException();
+            _dbContext.Eventos.Update(item);
+            _dbContext.SaveChanges();
+            return item;
         }
     }
 }

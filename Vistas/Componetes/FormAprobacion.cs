@@ -34,7 +34,7 @@ namespace NEWCODES.Vistas.Componetes
             }
             if (tiempoRestante <= 0)
             {
-                Aprobado = true;
+                Aprobado = false;
                 timer.Stop();
                 this.Close(); // Se cierra automáticamente
             }

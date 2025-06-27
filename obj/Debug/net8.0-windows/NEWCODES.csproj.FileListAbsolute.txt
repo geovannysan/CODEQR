@@ -139,3 +139,6 @@ D:\NET\NEWCODES\NEWCODES\obj\Debug\net8.0-windows\refint\NEWCODES.dll
 D:\NET\NEWCODES\NEWCODES\obj\Debug\net8.0-windows\NEWCODES.pdb
 D:\NET\NEWCODES\NEWCODES\obj\Debug\net8.0-windows\NEWCODES.genruntimeconfig.cache
 D:\NET\NEWCODES\NEWCODES\obj\Debug\net8.0-windows\ref\NEWCODES.dll
+D:\NET\NEWCODES\NEWCODES\bin\Debug\net8.0-windows\System.ServiceProcess.ServiceController.dll
+D:\NET\NEWCODES\NEWCODES\bin\Debug\net8.0-windows\WindowsFirewallHelper.dll
+D:\NET\NEWCODES\NEWCODES\bin\Debug\net8.0-windows\runtimes\win\lib\netstandard2.0\System.ServiceProcess.ServiceController.dll

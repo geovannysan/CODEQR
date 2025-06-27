@@ -1,4 +1,5 @@
-﻿using Entity;
+﻿using Aplicacion.Persistencia;
+using Entity;
 using Microsoft.EntityFrameworkCore;
 using NEWCODES.Aplicacion.DTO;
 using NEWCODES.Aplicacion.Presistencia;
@@ -57,7 +58,7 @@ namespace NEWCODES.Infraestructura.Persistencia
         {
             if(message.Codigo == null)
                 return new MessageSocket { Codigo = $"Ingrese un Código ", Type = "Error" };
-            var localdiad = _context.Set<Codigos>().AsNoTracking().Where(x => x.Codigo == message.Codigo && x.EventoID == int.Parse( idevent)).Select(x => new{x.Id, x.Codigo,x.Name,x.Precio,x.Estado,x.EventoID,time = DateTime.Now - x.time,x.info}).FirstOrDefault();
+            var localdiad = _context.Set<Codigos>().AsNoTracking().Where(x => x.Codigo == message.Codigo && x.EventoID == int.Parse( idevent)).Select(x => new{x.Id, x.Codigo,x.Name,x.Asiento,x.Estado,x.EventoID,time = DateTime.Now - x.time,x.info}).FirstOrDefault();
             if (localdiad == null)
             {              
                 _context.Add(new LogsEventos { Codigo = message.Codigo, Estado = "Rechazado", Mensaje = $"Código {message.Codigo} no encontrado", Tipo = "Codigo", time = DateTime.Now, IdEvento = int.Parse(idevent) });
@@ -65,25 +66,27 @@ namespace NEWCODES.Infraestructura.Persistencia
                 return new MessageSocket { Codigo = $"Código {message.Codigo} no encontrado" ,Type="Error"};
             }           
             var lsita = _context.Set<Localidades>().AsNoTracking().Where(x => x.Name == localdiad.Name && x.IdEvento == int.Parse(idevent)).FirstOrDefault();
-            if (lsita == null) {
+            if (lsita == null ) {
                 _context.Add(new LogsEventos { Codigo = message.Codigo, Estado = "No encontrado", Mensaje = $"Localidad {lsita.Name} no agregada", Tipo = "Localidad", time = DateTime.Now, IdEvento = int.Parse(idevent) });
                 _context.SaveChanges();
                 return new MessageSocket { Codigo = $"Localidad {localdiad.Name} no ha sido Agregado al evento", Type = "Error" };
             }
             var dispo = _context.Set<DispositivoLocation>().AsNoTracking().Where(x=>x.LocalidadID == lsita.Id  && x.DispoId== int.Parse( id)).FirstOrDefault();
-            if (dispo == null) {
+            var eventos = _context.Set<Eventos>().Find(int.Parse(idevent));
+            if (eventos.SelecionLocation == 0 && dispo == null) {
                 var dipoid = _context.Set<Dispositivos>().AsNoTracking().Where(x => x.Id == int.Parse(id)).FirstOrDefault();
                 _context.Add(new LogsEventos { Codigo = message.Codigo, Estado = "Rechazado", Mensaje = $"Código {message.Codigo} no autorizado para equipo {dipoid.Name}", Tipo = "Codigo", time = DateTime.Now, IdEvento = int.Parse(idevent) });
                 _context.SaveChanges();
                 return new MessageSocket { Codigo = $"No Autorizado para el escaneo en este Dispositivo", Type = "Error" };
             }
+            var dispos = _context.Set<Dispositivos>().Find( int.Parse(id));
             if (localdiad.Estado ==null)
             {
                 var codigo = new Codigos { Id = localdiad.Id };
                 _context.Attach(codigo);
                 codigo.time = DateTime.Now;
                 codigo.Estado = "Scaneado";
-                codigo.info = message.Type;
+                codigo.info = dispos.Name +" - "+ message.Type;
                 _context.Entry(codigo).Property(x => x.time).IsModified = true;
                 _context.SaveChanges();
                 return new MessageSocket { Codigo = "Válido", Type = "Success" };
@@ -100,7 +103,7 @@ namespace NEWCODES.Infraestructura.Persistencia
 
         public MessageSocket VerificaSalida(string id, string idevent, MessageSocket message)
         {
-            var localdiad = _context.Set<Codigos>().AsNoTracking().Where(x => x.Codigo == message.Codigo && x.EventoID == int.Parse(idevent)).Select(x => new { x.Id, x.Codigo, x.Name, x.Precio, x.Estado, x.EventoID, time = DateTime.Now - x.time, x.info }).FirstOrDefault();
+            var localdiad = _context.Set<Codigos>().AsNoTracking().Where(x => x.Codigo == message.Codigo && x.EventoID == int.Parse(idevent)).Select(x => new { x.Id, x.Codigo, x.Name, x.Asiento, x.Estado, x.EventoID, time = DateTime.Now - x.time, x.info }).FirstOrDefault();
             if (localdiad == null)
             {
                 _context.Add(new LogsEventos { Codigo = message.Codigo, Estado = "Rechazado", Mensaje = $"Código {message.Codigo} no encontrado", Tipo = "Codigo", time = DateTime.Now, IdEvento = int.Parse(idevent) });
@@ -145,6 +148,11 @@ namespace NEWCODES.Infraestructura.Persistencia
         }
 
         public bool InsertLogs(Codigos item)
+        {
+            throw new NotImplementedException();
+        }
+
+        Codigos IGenery<Codigos>.Update(Codigos item)
         {
             throw new NotImplementedException();
         }

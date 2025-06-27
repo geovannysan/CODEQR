@@ -1,4 +1,5 @@
-﻿using DocumentFormat.OpenXml.Office2010.Excel;
+﻿using Aplicacion.Persistencia;
+using DocumentFormat.OpenXml.Office2010.Excel;
 using Entity;
 using Microsoft.EntityFrameworkCore;
 using NEWCODES.Aplicacion.Presistencia;
@@ -69,6 +70,11 @@ namespace NEWCODES.Infraestructura.Persistencia
         }
 
         public bool InsertLogs(Dispositivos item)
+        {
+            throw new NotImplementedException();
+        }
+
+        Dispositivos IGenery<Dispositivos>.Update(Dispositivos item)
         {
             throw new NotImplementedException();
         }

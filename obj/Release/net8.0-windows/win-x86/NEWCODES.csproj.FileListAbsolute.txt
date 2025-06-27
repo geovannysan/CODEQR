@@ -583,3 +583,5 @@ D:\NET\NEWCODES\NEWCODES\obj\Release\net8.0-windows\win-x86\NEWCODES.Vistas.Codi
 D:\NET\NEWCODES\NEWCODES\bin\Release\net8.0-windows\win-x86\QRCoder.dll
 D:\NET\NEWCODES\NEWCODES\obj\Release\net8.0-windows\win-x86\NEWCODES.Vistas.Codigos.CodigosView.resources
 D:\NET\NEWCODES\NEWCODES\bin\Release\net8.0-windows\win-x86\NEWCODES.dll.config
+D:\NET\NEWCODES\NEWCODES\bin\Release\net8.0-windows\win-x86\System.ServiceProcess.ServiceController.dll
+D:\NET\NEWCODES\NEWCODES\bin\Release\net8.0-windows\win-x86\WindowsFirewallHelper.dll

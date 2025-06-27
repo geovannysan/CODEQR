@@ -115,7 +115,7 @@ namespace NEWCODES.Vistas.Codigos
                 {
                     Name = row.Cells.Count > 1 ? row.Cells[1].Value?.ToString() ?? "" : "",
                     Codigo = row.Cells.Count > 0 ? row.Cells[0].Value?.ToString() ?? "" : "",
-                    Precio = row.Cells.Count > 2 ? row.Cells[2].Value?.ToString() ?? "" : "",
+                    Asiento = row.Cells.Count > 2 ? row.Cells[2].Value?.ToString() ?? "" : "",
                     info = row.Cells.Count > 3 ? row.Cells[3].Value?.ToString() ?? "" : "",
                     EventoID = _ID
                 };

@@ -30,89 +30,60 @@
         {
             button1 = new Button();
             groupBox1 = new GroupBox();
-            dataGridView1 = new DataGridView();
-            Id = new DataGridViewTextBoxColumn();
-            Nombre = new DataGridViewTextBoxColumn();
-            Desciption = new DataGridViewTextBoxColumn();
-            Fecha = new DataGridViewTextBoxColumn();
-            Estado = new DataGridViewTextBoxColumn();
+            dataGridView2 = new DataGridView();
             button3 = new Button();
             button2 = new Button();
             materialCard1 = new MaterialSkin.Controls.MaterialCard();
+            Column1 = new DataGridViewTextBoxColumn();
+            Column2 = new DataGridViewTextBoxColumn();
+            Column3 = new DataGridViewTextBoxColumn();
+            Column4 = new DataGridViewTextBoxColumn();
+            Column5 = new DataGridViewCheckBoxColumn();
             groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)dataGridView2).BeginInit();
             materialCard1.SuspendLayout();
             SuspendLayout();
             // 
             // button1
             // 
-            button1.Location = new Point(695, 22);
+            button1.Location = new Point(718, 36);
             button1.Name = "button1";
-            button1.Size = new Size(75, 23);
+            button1.Size = new Size(115, 23);
             button1.TabIndex = 0;
-            button1.Text = "Nuevo";
+            button1.Text = "Nuevo Evento";
             button1.UseVisualStyleBackColor = true;
             button1.Click += button1_Click;
             // 
             // groupBox1
             // 
-            groupBox1.Controls.Add(dataGridView1);
+            groupBox1.Controls.Add(dataGridView2);
             groupBox1.Controls.Add(button3);
             groupBox1.Controls.Add(button2);
             groupBox1.Controls.Add(button1);
-            groupBox1.Location = new Point(17, 74);
+            groupBox1.Location = new Point(17, 17);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(783, 415);
+            groupBox1.Size = new Size(848, 497);
             groupBox1.TabIndex = 2;
             groupBox1.TabStop = false;
             groupBox1.Text = "Eventos";
             groupBox1.Enter += groupBox1_Enter;
             // 
-            // dataGridView1
+            // dataGridView2
             // 
-            dataGridView1.AllowUserToAddRows = false;
-            dataGridView1.AllowUserToDeleteRows = false;
-            dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dataGridView1.BackgroundColor = SystemColors.Control;
-            dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView1.Columns.AddRange(new DataGridViewColumn[] { Id, Nombre, Desciption, Fecha, Estado });
-            dataGridView1.EditMode = DataGridViewEditMode.EditProgrammatically;
-            dataGridView1.GridColor = SystemColors.ScrollBar;
-            dataGridView1.Location = new Point(6, 86);
-            dataGridView1.Name = "dataGridView1";
-            dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dataGridView1.Size = new Size(764, 309);
-            dataGridView1.TabIndex = 1;
-            dataGridView1.CellContentClick += dataGridView1_CellContentClick;
-            // 
-            // Id
-            // 
-            Id.HeaderText = "ID";
-            Id.Name = "Id";
-            // 
-            // Nombre
-            // 
-            Nombre.HeaderText = "Evento";
-            Nombre.Name = "Nombre";
-            // 
-            // Desciption
-            // 
-            Desciption.HeaderText = "Detalle";
-            Desciption.Name = "Desciption";
-            // 
-            // Fecha
-            // 
-            Fecha.HeaderText = "Fecha";
-            Fecha.Name = "Fecha";
-            // 
-            // Estado
-            // 
-            Estado.HeaderText = "Permisos";
-            Estado.Name = "Estado";
+            dataGridView2.AllowUserToAddRows = false;
+            dataGridView2.AllowUserToDeleteRows = false;
+            dataGridView2.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dataGridView2.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridView2.Columns.AddRange(new DataGridViewColumn[] { Column1, Column2, Column3, Column4, Column5 });
+            dataGridView2.Location = new Point(6, 86);
+            dataGridView2.Name = "dataGridView2";
+            dataGridView2.Size = new Size(836, 400);
+            dataGridView2.TabIndex = 4;
+            dataGridView2.CellContentClick += dataGridView2_CellContentClick;
             // 
             // button3
             // 
-            button3.Location = new Point(346, 22);
+            button3.Location = new Point(73, 57);
             button3.Name = "button3";
             button3.Size = new Size(75, 23);
             button3.TabIndex = 3;
@@ -142,15 +113,47 @@
             materialCard1.MouseState = MaterialSkin.MouseState.HOVER;
             materialCard1.Name = "materialCard1";
             materialCard1.Padding = new Padding(14);
-            materialCard1.Size = new Size(818, 509);
+            materialCard1.Size = new Size(889, 537);
             materialCard1.TabIndex = 3;
+            // 
+            // Column1
+            // 
+            Column1.HeaderText = "Id";
+            Column1.Name = "Column1";
+            Column1.Resizable = DataGridViewTriState.False;
+            // 
+            // Column2
+            // 
+            Column2.HeaderText = "Evento";
+            Column2.Name = "Column2";
+            Column2.ReadOnly = true;
+            // 
+            // Column3
+            // 
+            Column3.HeaderText = "Detalle";
+            Column3.Name = "Column3";
+            Column3.ReadOnly = true;
+            // 
+            // Column4
+            // 
+            Column4.HeaderText = "Fecha";
+            Column4.Name = "Column4";
+            Column4.ReadOnly = true;
+            // 
+            // Column5
+            // 
+            Column5.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            Column5.HeaderText = "Autorizado full";
+            Column5.Name = "Column5";
+            Column5.ReadOnly = true;
+            Column5.Width = 91;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             AutoSize = true;
-            ClientSize = new Size(824, 576);
+            ClientSize = new Size(895, 604);
             Controls.Add(materialCard1);
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Name = "Form1";
@@ -158,7 +161,7 @@
             Text = "CODEQR";
             Load += Form1_Load;
             groupBox1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)dataGridView2).EndInit();
             materialCard1.ResumeLayout(false);
             ResumeLayout(false);
         }
@@ -167,14 +170,14 @@
 
         private Button button1;
         private GroupBox groupBox1;
-        private DataGridView dataGridView1;
-        private DataGridViewTextBoxColumn Id;
-        private DataGridViewTextBoxColumn Nombre;
-        private DataGridViewTextBoxColumn Desciption;
-        private DataGridViewTextBoxColumn Fecha;
-        private DataGridViewTextBoxColumn Estado;
         private Button button3;
         private Button button2;
         private MaterialSkin.Controls.MaterialCard materialCard1;
+        private DataGridView dataGridView2;
+        private DataGridViewTextBoxColumn Column1;
+        private DataGridViewTextBoxColumn Column2;
+        private DataGridViewTextBoxColumn Column3;
+        private DataGridViewTextBoxColumn Column4;
+        private DataGridViewCheckBoxColumn Column5;
     }
 }

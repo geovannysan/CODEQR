@@ -15,6 +15,7 @@ namespace Entity
         public string? Estado { get; set; } 
         public DateTime time { get; set; }
         public int EventoID { get; set; }
+        public int? Conteo { get; set; } = 0;
         public Eventos Eventos { get; set; }  
     }
 }

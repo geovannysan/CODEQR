@@ -11,6 +11,8 @@ namespace Entity
         public string Name { get; set; } = string.Empty;
         public string Count { get; set; } = string.Empty;
         public int IdEvento { get; set; }
+        public int TotalIngres { get; set; } = 1;
+
         public Eventos Eventos { get; set; }
     }
 }

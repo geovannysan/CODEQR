@@ -46,6 +46,8 @@ D:\NET\NEWCODES\NEWCODES\bin\Release\net8.0-windows\System.Composition.Runtime.d
 D:\NET\NEWCODES\NEWCODES\bin\Release\net8.0-windows\System.Composition.TypedParts.dll
 D:\NET\NEWCODES\NEWCODES\bin\Release\net8.0-windows\System.IO.Packaging.dll
 D:\NET\NEWCODES\NEWCODES\bin\Release\net8.0-windows\System.IO.Pipelines.dll
+D:\NET\NEWCODES\NEWCODES\bin\Release\net8.0-windows\System.ServiceProcess.ServiceController.dll
+D:\NET\NEWCODES\NEWCODES\bin\Release\net8.0-windows\WindowsFirewallHelper.dll
 D:\NET\NEWCODES\NEWCODES\bin\Release\net8.0-windows\cs\Microsoft.CodeAnalysis.resources.dll
 D:\NET\NEWCODES\NEWCODES\bin\Release\net8.0-windows\de\Microsoft.CodeAnalysis.resources.dll
 D:\NET\NEWCODES\NEWCODES\bin\Release\net8.0-windows\es\Microsoft.CodeAnalysis.resources.dll
@@ -118,6 +120,7 @@ D:\NET\NEWCODES\NEWCODES\bin\Release\net8.0-windows\runtimes\win-arm\native\e_sq
 D:\NET\NEWCODES\NEWCODES\bin\Release\net8.0-windows\runtimes\win-arm64\native\e_sqlite3.dll
 D:\NET\NEWCODES\NEWCODES\bin\Release\net8.0-windows\runtimes\win-x64\native\e_sqlite3.dll
 D:\NET\NEWCODES\NEWCODES\bin\Release\net8.0-windows\runtimes\win-x86\native\e_sqlite3.dll
+D:\NET\NEWCODES\NEWCODES\bin\Release\net8.0-windows\runtimes\win\lib\netstandard2.0\System.ServiceProcess.ServiceController.dll
 D:\NET\NEWCODES\NEWCODES\obj\Release\net8.0-windows\NEWCODES.csproj.AssemblyReference.cache
 D:\NET\NEWCODES\NEWCODES\obj\Release\net8.0-windows\NEWCODES.Form1.resources
 D:\NET\NEWCODES\NEWCODES\obj\Release\net8.0-windows\NEWCODES.Properties.Resources.resources
@@ -139,6 +142,3 @@ D:\NET\NEWCODES\NEWCODES\obj\Release\net8.0-windows\refint\NEWCODES.dll
 D:\NET\NEWCODES\NEWCODES\obj\Release\net8.0-windows\NEWCODES.pdb
 D:\NET\NEWCODES\NEWCODES\obj\Release\net8.0-windows\NEWCODES.genruntimeconfig.cache
 D:\NET\NEWCODES\NEWCODES\obj\Release\net8.0-windows\ref\NEWCODES.dll
-D:\NET\NEWCODES\NEWCODES\bin\Release\net8.0-windows\System.ServiceProcess.ServiceController.dll
-D:\NET\NEWCODES\NEWCODES\bin\Release\net8.0-windows\WindowsFirewallHelper.dll
-D:\NET\NEWCODES\NEWCODES\bin\Release\net8.0-windows\runtimes\win\lib\netstandard2.0\System.ServiceProcess.ServiceController.dll

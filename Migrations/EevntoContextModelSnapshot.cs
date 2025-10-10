@@ -29,6 +29,9 @@ namespace NEWCODES.Migrations
                     b.Property<string>("Codigo")
                         .HasColumnType("TEXT");
 
+                    b.Property<int?>("Conteo")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Estado")
                         .HasColumnType("TEXT");
 
@@ -149,6 +152,9 @@ namespace NEWCODES.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("TotalIngres")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 

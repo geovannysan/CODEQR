@@ -39,7 +39,8 @@ namespace NEWCODES.Vistas
             _ID = id;
             Dispositivos.TabPages[0].Text = "SCANEO";
             Dispositivos.TabPages[1].Text = "DISPOCITIVOS";
-            Dispositivos.TabPages[2].Text = "LOCALIDAD";
+            Dispositivos.TabPages[2].Text = "ESTADOS";
+            Dispositivos.TabPages[3].Text = "LOCALIDAD";
             ipserver.Text = GetLocalIPAddress();
             ip = GetLocalIPAddress();
             puerto = puertoTxt.Text;
@@ -296,44 +297,45 @@ namespace NEWCODES.Vistas
                         // Cliente no registrado
                         string remoteIP = context.Request.RemoteEndPoint?.ToString() ?? "Desconocido";
 
-                        
+
                         // Mostrar el formulario de aprobación en un hilo aparte para evitar bloqueo
                         if (materialCheckbox2.Checked)
                         {
-                                String cli = clientId.Substring(0, 7);
-                                var registro = dispoditivos.Insert(new Dispositivos
-                                {
-                                    Name = modelo,
-                                    IDequipo = clientId,
-                                    Ip = remoteIP,
-                                    Estado = "Conectado",
-                                    EventoID = _ID,
-                                }, _ID);
+                            String cli = clientId.Substring(0, 7);
+                            var registro = dispoditivos.Insert(new Dispositivos
+                            {
+                                Name = modelo,
+                                IDequipo = clientId,
+                                Ip = remoteIP,
+                                Estado = "Conectado",
+                                EventoID = _ID,
+                            }, _ID);
 
-                                WebSocket webSocket = (await context.AcceptWebSocketAsync(null)).WebSocket;
+                            WebSocket webSocket = (await context.AcceptWebSocketAsync(null)).WebSocket;
 
-                                if (!connectedClients.ContainsKey(clientId))
-                                    connectedClients[clientId] = new List<WebSocket>();
+                            if (!connectedClients.ContainsKey(clientId))
+                                connectedClients[clientId] = new List<WebSocket>();
 
-                                connectedClients[clientId].Add(webSocket);
+                            connectedClients[clientId].Add(webSocket);
 
-                                // AppendLog("✅ Conexión WebSocket aceptada .");
-                                AppendLog($"✅ Conexión WebSocket aceptada.{clientId} {modelo}");
-                                var disp = dispoditivos.Getlist(_ID);
-                                this.Invoke(new Action(() =>
-                                {
-                                    dataDispositi.Rows.Clear();
-                                    foreach (var device in disp)
-                                        dataDispositi.Rows.Add(device.Id, device.Name, device.IDequipo, device.Estado);
-                                    CargarClientesEnGrid();
-                                }));
+                            // AppendLog("✅ Conexión WebSocket aceptada .");
+                            AppendLog($"✅ Conexión WebSocket aceptada.{clientId} {modelo}");
+                            var disp = dispoditivos.Getlist(_ID);
+                            this.Invoke(new Action(() =>
+                            {
+                                dataDispositi.Rows.Clear();
+                                foreach (var device in disp)
+                                    dataDispositi.Rows.Add(device.Id, device.Name, device.IDequipo, device.Estado);
+                                CargarClientesEnGrid();
+                            }));
 
-                                _ = Task.Run(() => HandleWebSocketMessages(registro, webSocket));
-                            
+                            _ = Task.Run(() => HandleWebSocketMessages(registro, webSocket));
+
 
                         }
-                        if (!materialCheckbox2.Checked) 
-                        {    Task<bool> solicitudAprobacion = Task.Run(() =>
+                        if (!materialCheckbox2.Checked)
+                        {
+                            Task<bool> solicitudAprobacion = Task.Run(() =>
                         {
                             bool aprobado = false;
 
@@ -394,7 +396,7 @@ namespace NEWCODES.Vistas
                             }
 
                         }
-                      
+
                     }
                 }
                 catch (Exception ex)
@@ -588,7 +590,7 @@ namespace NEWCODES.Vistas
             EventosRepository eventosRepository = new EventosRepository();
             var dato = eventosRepository.Get(Convert.ToString(_ID));
             txtEvento.Text = dato.Nombre;
-            materialCheckbox1.Checked = (dato.SelecionLocation==1);
+            materialCheckbox1.Checked = (dato.SelecionLocation == 1);
             DispoditivosRepsoitory dispoditivos = new DispoditivosRepsoitory();
             LocalidadesRepository localidades = new LocalidadesRepository();
             CodigosRepository codigos = new CodigosRepository();
@@ -935,11 +937,11 @@ namespace NEWCODES.Vistas
                     Description = dato.Description,
                     Nombre = dato.Nombre,
                     Fecha = dato.Fecha,
-                    SelecionLocation = materialCheckbox1.Checked?1 : 0,
+                    SelecionLocation = materialCheckbox1.Checked ? 1 : 0,
                 });
 
                 // Está activado
-               // MessageBox.Show("CheckBox marcado");
+                // MessageBox.Show("CheckBox marcado");
             }
             else
             {
@@ -954,6 +956,16 @@ namespace NEWCODES.Vistas
                 // Está desactivado
                 //MessageBox.Show("CheckBox desmarcado");
             }
+        }
+
+        private void materialCheckbox2_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void splitContainer2_Panel2_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
 }

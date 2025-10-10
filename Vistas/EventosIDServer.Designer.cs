@@ -55,11 +55,12 @@
             Column3 = new DataGridViewTextBoxColumn();
             tabPage3 = new TabPage();
             splitContainer2 = new SplitContainer();
-            button2 = new Button();
             datagridLocalidad = new DataGridView();
             Column4 = new DataGridViewTextBoxColumn();
             Column5 = new DataGridViewTextBoxColumn();
             Scaneado = new DataGridViewTextBoxColumn();
+            button2 = new Button();
+            tabPage4 = new TabPage();
             button3 = new Button();
             ExportarCodigos = new Button();
             datagridcoidgos = new DataGridView();
@@ -93,6 +94,7 @@
             splitContainer2.Panel2.SuspendLayout();
             splitContainer2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)datagridLocalidad).BeginInit();
+            tabPage4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)datagridcoidgos).BeginInit();
             groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
@@ -100,7 +102,7 @@
             // 
             // button1
             // 
-            button1.Location = new Point(553, 47);
+            button1.Location = new Point(679, 47);
             button1.Name = "button1";
             button1.Size = new Size(100, 41);
             button1.TabIndex = 0;
@@ -110,7 +112,7 @@
             // 
             // puertoTxt
             // 
-            puertoTxt.Location = new Point(553, 16);
+            puertoTxt.Location = new Point(681, 16);
             puertoTxt.Name = "puertoTxt";
             puertoTxt.Size = new Size(100, 23);
             puertoTxt.TabIndex = 1;
@@ -118,7 +120,7 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(480, 19);
+            label1.Location = new Point(622, 20);
             label1.Name = "label1";
             label1.Size = new Size(53, 15);
             label1.TabIndex = 2;
@@ -131,7 +133,7 @@
             txtLog.Multiline = true;
             txtLog.Name = "txtLog";
             txtLog.ReadOnly = true;
-            txtLog.Size = new Size(668, 76);
+            txtLog.Size = new Size(791, 76);
             txtLog.TabIndex = 3;
             // 
             // Dispositivos
@@ -139,11 +141,12 @@
             Dispositivos.Controls.Add(tabPage1);
             Dispositivos.Controls.Add(tabPage2);
             Dispositivos.Controls.Add(tabPage3);
+            Dispositivos.Controls.Add(tabPage4);
             Dispositivos.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             Dispositivos.Location = new Point(12, 179);
             Dispositivos.Name = "Dispositivos";
             Dispositivos.SelectedIndex = 0;
-            Dispositivos.Size = new Size(673, 286);
+            Dispositivos.Size = new Size(798, 286);
             Dispositivos.TabIndex = 4;
             // 
             // tabPage1
@@ -153,7 +156,7 @@
             tabPage1.Location = new Point(4, 24);
             tabPage1.Name = "tabPage1";
             tabPage1.Padding = new Padding(3);
-            tabPage1.Size = new Size(665, 258);
+            tabPage1.Size = new Size(790, 258);
             tabPage1.TabIndex = 0;
             tabPage1.Text = "tabPage1";
             tabPage1.UseVisualStyleBackColor = true;
@@ -163,7 +166,7 @@
             groupBox3.Controls.Add(datagridCliente);
             groupBox3.Location = new Point(271, 6);
             groupBox3.Name = "groupBox3";
-            groupBox3.Size = new Size(387, 246);
+            groupBox3.Size = new Size(514, 246);
             groupBox3.TabIndex = 1;
             groupBox3.TabStop = false;
             // 
@@ -174,12 +177,11 @@
             datagridCliente.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             datagridCliente.BackgroundColor = SystemColors.Menu;
             datagridCliente.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            datagridCliente.Dock = DockStyle.Fill;
             datagridCliente.EditMode = DataGridViewEditMode.EditProgrammatically;
             datagridCliente.Location = new Point(3, 19);
             datagridCliente.Name = "datagridCliente";
             datagridCliente.ReadOnly = true;
-            datagridCliente.Size = new Size(381, 224);
+            datagridCliente.Size = new Size(505, 224);
             datagridCliente.TabIndex = 0;
             datagridCliente.CellContentClick += datagridCliente_CellContentClick;
             // 
@@ -292,7 +294,7 @@
             tabPage2.Location = new Point(4, 24);
             tabPage2.Name = "tabPage2";
             tabPage2.Padding = new Padding(3);
-            tabPage2.Size = new Size(665, 258);
+            tabPage2.Size = new Size(790, 258);
             tabPage2.TabIndex = 1;
             tabPage2.Text = "tabPage2";
             tabPage2.UseVisualStyleBackColor = true;
@@ -301,7 +303,7 @@
             // 
             txtBuscar.Location = new Point(6, 7);
             txtBuscar.Name = "txtBuscar";
-            txtBuscar.Size = new Size(647, 23);
+            txtBuscar.Size = new Size(769, 23);
             txtBuscar.TabIndex = 1;
             txtBuscar.TextChanged += txtBuscar_TextChanged;
             // 
@@ -315,7 +317,7 @@
             dataDispositi.Location = new Point(3, 33);
             dataDispositi.MultiSelect = false;
             dataDispositi.Name = "dataDispositi";
-            dataDispositi.Size = new Size(659, 219);
+            dataDispositi.Size = new Size(775, 219);
             dataDispositi.TabIndex = 0;
             dataDispositi.CellContentClick += dataDispositi_CellContentClick;
             // 
@@ -349,7 +351,7 @@
             tabPage3.Location = new Point(4, 24);
             tabPage3.Name = "tabPage3";
             tabPage3.Padding = new Padding(3);
-            tabPage3.Size = new Size(665, 258);
+            tabPage3.Size = new Size(790, 258);
             tabPage3.TabIndex = 2;
             tabPage3.Text = "tabPage3";
             tabPage3.UseVisualStyleBackColor = true;
@@ -359,30 +361,19 @@
             splitContainer2.Dock = DockStyle.Fill;
             splitContainer2.Location = new Point(3, 3);
             splitContainer2.Name = "splitContainer2";
+            splitContainer2.Orientation = Orientation.Horizontal;
             // 
             // splitContainer2.Panel1
             // 
-            splitContainer2.Panel1.Controls.Add(button2);
             splitContainer2.Panel1.Controls.Add(datagridLocalidad);
             // 
             // splitContainer2.Panel2
             // 
-            splitContainer2.Panel2.Controls.Add(button3);
-            splitContainer2.Panel2.Controls.Add(ExportarCodigos);
-            splitContainer2.Panel2.Controls.Add(datagridcoidgos);
-            splitContainer2.Size = new Size(659, 252);
-            splitContainer2.SplitterDistance = 316;
+            splitContainer2.Panel2.Controls.Add(button2);
+            splitContainer2.Panel2.Paint += splitContainer2_Panel2_Paint;
+            splitContainer2.Size = new Size(784, 252);
+            splitContainer2.SplitterDistance = 223;
             splitContainer2.TabIndex = 0;
-            // 
-            // button2
-            // 
-            button2.Location = new Point(3, 5);
-            button2.Name = "button2";
-            button2.Size = new Size(277, 23);
-            button2.TabIndex = 8;
-            button2.Text = "Exportar Actividad";
-            button2.UseVisualStyleBackColor = true;
-            button2.Visible = false;
             // 
             // datagridLocalidad
             // 
@@ -390,10 +381,11 @@
             datagridLocalidad.AllowUserToDeleteRows = false;
             datagridLocalidad.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             datagridLocalidad.Columns.AddRange(new DataGridViewColumn[] { Column4, Column5, Scaneado });
-            datagridLocalidad.Location = new Point(0, 34);
+            datagridLocalidad.Dock = DockStyle.Fill;
+            datagridLocalidad.Location = new Point(0, 0);
             datagridLocalidad.Name = "datagridLocalidad";
             datagridLocalidad.ReadOnly = true;
-            datagridLocalidad.Size = new Size(313, 215);
+            datagridLocalidad.Size = new Size(784, 223);
             datagridLocalidad.TabIndex = 0;
             datagridLocalidad.CellContentClick += datagridLocalidad_CellContentClick;
             // 
@@ -416,9 +408,32 @@
             Scaneado.Name = "Scaneado";
             Scaneado.ReadOnly = true;
             // 
+            // button2
+            // 
+            button2.Location = new Point(0, 2);
+            button2.Name = "button2";
+            button2.Size = new Size(772, 23);
+            button2.TabIndex = 8;
+            button2.Text = "Exportar Actividad";
+            button2.UseVisualStyleBackColor = true;
+            button2.Visible = false;
+            // 
+            // tabPage4
+            // 
+            tabPage4.Controls.Add(button3);
+            tabPage4.Controls.Add(ExportarCodigos);
+            tabPage4.Controls.Add(datagridcoidgos);
+            tabPage4.Location = new Point(4, 24);
+            tabPage4.Name = "tabPage4";
+            tabPage4.Padding = new Padding(3);
+            tabPage4.Size = new Size(790, 258);
+            tabPage4.TabIndex = 3;
+            tabPage4.Text = "tabPage4";
+            tabPage4.UseVisualStyleBackColor = true;
+            // 
             // button3
             // 
-            button3.Location = new Point(155, 5);
+            button3.Location = new Point(174, 6);
             button3.Name = "button3";
             button3.Size = new Size(145, 23);
             button3.TabIndex = 3;
@@ -428,7 +443,7 @@
             // 
             // ExportarCodigos
             // 
-            ExportarCodigos.Location = new Point(3, 5);
+            ExportarCodigos.Location = new Point(6, 6);
             ExportarCodigos.Name = "ExportarCodigos";
             ExportarCodigos.Size = new Size(145, 23);
             ExportarCodigos.TabIndex = 2;
@@ -441,10 +456,10 @@
             datagridcoidgos.AllowUserToAddRows = false;
             datagridcoidgos.AllowUserToDeleteRows = false;
             datagridcoidgos.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            datagridcoidgos.Location = new Point(3, 34);
+            datagridcoidgos.Location = new Point(6, 35);
             datagridcoidgos.Name = "datagridcoidgos";
             datagridcoidgos.ReadOnly = true;
-            datagridcoidgos.Size = new Size(333, 215);
+            datagridcoidgos.Size = new Size(769, 217);
             datagridcoidgos.TabIndex = 0;
             datagridcoidgos.CellContentClick += datagridcoidgos_CellContentClick;
             // 
@@ -558,7 +573,7 @@
             groupBox1.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             groupBox1.Location = new Point(16, 79);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(659, 94);
+            groupBox1.Size = new Size(794, 94);
             groupBox1.TabIndex = 6;
             groupBox1.TabStop = false;
             groupBox1.Text = "Server";
@@ -568,7 +583,7 @@
             // 
             materialCheckbox2.AutoSize = true;
             materialCheckbox2.Depth = 0;
-            materialCheckbox2.Location = new Point(283, 10);
+            materialCheckbox2.Location = new Point(380, 9);
             materialCheckbox2.Margin = new Padding(0);
             materialCheckbox2.MouseLocation = new Point(-1, -1);
             materialCheckbox2.MouseState = MaterialSkin.MouseState.HOVER;
@@ -579,12 +594,13 @@
             materialCheckbox2.TabIndex = 10;
             materialCheckbox2.Text = "Autorizar Dispositivos";
             materialCheckbox2.UseVisualStyleBackColor = true;
+            materialCheckbox2.CheckedChanged += materialCheckbox2_CheckedChanged;
             // 
             // materialCheckbox1
             // 
             materialCheckbox1.AutoSize = true;
             materialCheckbox1.Depth = 0;
-            materialCheckbox1.Location = new Point(284, 47);
+            materialCheckbox1.Location = new Point(381, 46);
             materialCheckbox1.Margin = new Padding(0);
             materialCheckbox1.MouseLocation = new Point(-1, -1);
             materialCheckbox1.MouseState = MaterialSkin.MouseState.HOVER;
@@ -600,7 +616,7 @@
             // pictureBox1
             // 
             pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
-            pictureBox1.Location = new Point(501, 47);
+            pictureBox1.Location = new Point(621, 47);
             pictureBox1.Name = "pictureBox1";
             pictureBox1.Size = new Size(32, 31);
             pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
@@ -647,12 +663,11 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(691, 568);
+            ClientSize = new Size(822, 568);
             Controls.Add(groupBox1);
             Controls.Add(label2);
             Controls.Add(Dispositivos);
             Controls.Add(txtLog);
-           // Name = "EventosIDServer";
             StartPosition = FormStartPosition.CenterParent;
             Text = "EventosIDServer";
             Load += EventosIDServer_Load;
@@ -671,6 +686,7 @@
             ((System.ComponentModel.ISupportInitialize)splitContainer2).EndInit();
             splitContainer2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)datagridLocalidad).EndInit();
+            tabPage4.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)datagridcoidgos).EndInit();
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
@@ -732,5 +748,6 @@
         private TextBox txtBuscar;
         private MaterialSkin.Controls.MaterialCheckbox materialCheckbox1;
         private MaterialSkin.Controls.MaterialCheckbox materialCheckbox2;
+        private TabPage tabPage4;
     }
 }

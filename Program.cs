@@ -9,26 +9,27 @@ namespace NEWCODES
         [STAThread]
         static void Main()
         {
-            // Verificar si estamos en modo administrador
             if (!EsAdministrador())
             {
                 try
                 {
-                    // Reiniciar la aplicación con privilegios elevados
-                    var psi = new ProcessStartInfo
+                    var exePath = Process.GetCurrentProcess().MainModule.FileName;
+                    ProcessStartInfo psi = new ProcessStartInfo(exePath)
                     {
-                        FileName = Application.ExecutablePath,
                         UseShellExecute = true,
-                        Verb = "runas" // Esto lanza el UAC
+                        Verb = "runas" // Ejecutar como administrador
                     };
+
                     Process.Start(psi);
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Se requieren permisos de administrador.\n" + ex.Message);
+                    MessageBox.Show("Se requieren permisos de administrador para ejecutar esta aplicación.\n\n" + ex.Message,
+                        "Permisos requeridos", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
 
-                return; // Salir del proceso actual
+                // Salir del proceso actual (no administrador)
+                return;
             }
 
             // Aquí continúa la app con privilegios elevados

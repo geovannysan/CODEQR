@@ -54,51 +54,131 @@ namespace NEWCODES.Infraestructura.Persistencia
                 return null;
             }
         }
-        public MessageSocket Verifica(string id,string idevent,MessageSocket message)
+        public MessageSocket Verifica(string id, string idevent, MessageSocket message)
         {
-            if(message.Codigo == null)
-                return new MessageSocket { Codigo = $"Ingrese un Código ", Type = "Error" };
-            var localdiad = _context.Set<Codigos>().AsNoTracking().Where(x => x.Codigo == message.Codigo && x.EventoID == int.Parse( idevent)).Select(x => new{x.Id, x.Codigo,x.Name,x.Asiento,x.Estado,x.EventoID,time = DateTime.Now - x.time,x.info}).FirstOrDefault();
-            if (localdiad == null)
-            {              
-                _context.Add(new LogsEventos { Codigo = message.Codigo, Estado = "Rechazado", Mensaje = $"Código {message.Codigo} no encontrado", Tipo = "Codigo", time = DateTime.Now, IdEvento = int.Parse(idevent) });
-                _context.SaveChanges();
-                return new MessageSocket { Codigo = $"Código {message.Codigo} no encontrado" ,Type="Error"};
-            }           
-            var lsita = _context.Set<Localidades>().AsNoTracking().Where(x => x.Name == localdiad.Name && x.IdEvento == int.Parse(idevent)).FirstOrDefault();
-            if (lsita == null ) {
-                _context.Add(new LogsEventos { Codigo = message.Codigo, Estado = "No encontrado", Mensaje = $"Localidad {lsita.Name} no agregada", Tipo = "Localidad", time = DateTime.Now, IdEvento = int.Parse(idevent) });
-                _context.SaveChanges();
-                return new MessageSocket { Codigo = $"Localidad {localdiad.Name} no ha sido Agregado al evento", Type = "Error" };
-            }
-            var dispo = _context.Set<DispositivoLocation>().AsNoTracking().Where(x=>x.LocalidadID == lsita.Id  && x.DispoId== int.Parse( id)).FirstOrDefault();
-            var eventos = _context.Set<Eventos>().Find(int.Parse(idevent));
-            if (eventos.SelecionLocation == 0 && dispo == null) {
-                var dipoid = _context.Set<Dispositivos>().AsNoTracking().Where(x => x.Id == int.Parse(id)).FirstOrDefault();
-                _context.Add(new LogsEventos { Codigo = message.Codigo, Estado = "Rechazado", Mensaje = $"Código {message.Codigo} no autorizado para equipo {dipoid.Name}", Tipo = "Codigo", time = DateTime.Now, IdEvento = int.Parse(idevent) });
-                _context.SaveChanges();
-                return new MessageSocket { Codigo = $"No Autorizado para el escaneo en este Dispositivo", Type = "Error" };
-            }
-            var dispos = _context.Set<Dispositivos>().Find( int.Parse(id));
-            if (localdiad.Estado ==null)
-            {
-                var codigo = new Codigos { Id = localdiad.Id };
-                _context.Attach(codigo);
-                codigo.time = DateTime.Now;
-                codigo.Estado = "Scaneado";
-                codigo.info = dispos.Name +" - "+ message.Type;
-                _context.Entry(codigo).Property(x => x.time).IsModified = true;
-                _context.SaveChanges();
-                return new MessageSocket { Codigo = "Válido", Type = "Success" };
-               
-            }
-            TimeSpan diff = localdiad.time;
-            string formateado = $"{(int)diff.TotalDays} Días, {diff.Hours} HH. {diff.Minutes} min. {diff.Seconds} seg.";
-            Console.WriteLine(formateado);
-            _context.Add(new LogsEventos { Codigo = message.Codigo, Estado = "Repetido", Mensaje = $"Código {message.Codigo} ya fue escaneado", Tipo = "Codigo", time = DateTime.Now, IdEvento = int.Parse(idevent) });
-            _context.SaveChanges();
-            return new MessageSocket { Codigo = $"Codigo escaneado - {formateado}", Type = "Error" };
+            if (string.IsNullOrEmpty(message.Codigo))
+                return new MessageSocket { Codigo = "Ingrese un Código", Type = "Error" };
 
+            if (!int.TryParse(idevent, out int eventoIdInt))
+                return new MessageSocket { Codigo = "ID de evento inválido", Type = "Error" };
+
+            if (!int.TryParse(id, out int dispositivoIdInt))
+                return new MessageSocket { Codigo = "ID de dispositivo inválido", Type = "Error" };
+
+            // Buscar el código
+            var localdiad = _context.Set<Codigos>()
+                .AsNoTracking()
+                .Where(x => x.Codigo == message.Codigo && x.EventoID == eventoIdInt)
+                .Select(x => new { x.Id, x.Codigo, x.Name, x.Asiento, x.Estado, x.EventoID, x.time, x.info })
+                .FirstOrDefault();
+
+            var dispos = _context.Set<Dispositivos>().Find(dispositivoIdInt);
+
+            // Si no existe el código, lo agrega como no encontrado
+            if (localdiad == null)
+            {
+                _context.Add(new Codigos
+                {
+                    Codigo = message.Codigo,
+                    EventoID = eventoIdInt,
+                    Estado = "Scaneado", // 
+                    info = dispos != null ? dispos.Name + " - " + message.Type : message.Type,
+                    time= DateTime.Now
+                });
+
+                _context.Add(new LogsEventos
+                {
+                    Codigo = message.Codigo,
+                    Estado = "Rechazado",
+                    Mensaje = $"Código {message.Codigo} no encontrado",
+                    Tipo = "Codigo",
+                    time = DateTime.Now,
+                    IdEvento = eventoIdInt
+                });
+
+                _context.SaveChanges();
+
+                return new MessageSocket { Codigo = $"Válido {message.Codigo} ", Type = "Success" };
+            }
+
+
+
+            if (localdiad.Estado == "Scaneado")
+            {
+                TimeSpan diff =  localdiad.time- DateTime.Now ;
+
+                string formateado = $"{(int)diff.TotalDays} Días, {diff.Hours} HH. {diff.Minutes} min. {diff.Seconds} seg.";
+
+                _context.Add(new LogsEventos
+                {
+                    Codigo = message.Codigo,
+                    Estado = "Repetido",
+                    Mensaje = $"Código {message.Codigo} ya fue escaneado",
+                    Tipo = "Codigo",
+                    time = DateTime.Now,
+                    IdEvento = eventoIdInt
+                });
+                _context.SaveChanges();
+
+                return new MessageSocket { Codigo = $"Código escaneado anteriormente - {formateado}", Type = "Error" };
+            }
+
+
+            // Buscar localidad
+            var lsita = _context.Set<Localidades>()
+                .AsNoTracking()
+                .FirstOrDefault(x => x.Name == localdiad.Name && x.IdEvento == eventoIdInt);
+
+            if (lsita == null)
+            {
+                _context.Add(new LogsEventos
+                {
+                    Codigo = message.Codigo,
+                    Estado = "No encontrado",
+                    Mensaje = $"Localidad {localdiad.Name} no agregada",
+                    Tipo = "Localidad",
+                    time = DateTime.Now,
+                    IdEvento = eventoIdInt
+                });
+                _context.SaveChanges();
+
+                return new MessageSocket { Codigo = $"Localidad {localdiad.Name} no ha sido agregada al evento", Type = "Error" };
+            }
+
+            // Verificar autorización del dispositivo para la localidad
+            var dispoLocation = _context.Set<DispositivoLocation>()
+                .AsNoTracking()
+                .FirstOrDefault(x => x.LocalidadID == lsita.Id && x.DispoId == dispositivoIdInt);
+
+            var eventos = _context.Set<Eventos>().Find(eventoIdInt);
+            if (eventos != null && eventos.SelecionLocation == 0 && dispoLocation == null)
+            {
+                var dipoid = _context.Set<Dispositivos>().AsNoTracking().FirstOrDefault(x => x.Id == dispositivoIdInt);
+
+                _context.Add(new LogsEventos
+                {
+                    Codigo = message.Codigo,
+                    Estado = "Rechazado",
+                    Mensaje = $"Código {message.Codigo} no autorizado para equipo {(dipoid != null ? dipoid.Name : "Desconocido")}",
+                    Tipo = "Codigo",
+                    time = DateTime.Now,
+                    IdEvento = eventoIdInt
+                });
+                _context.SaveChanges();
+
+                return new MessageSocket { Codigo = "No autorizado para el escaneo en este dispositivo", Type = "Error" };
+            }
+
+            // Si el código aún no ha sido escaneado
+            var codigoUpdate = new Codigos { Id = localdiad.Id };
+            _context.Attach(codigoUpdate);
+            codigoUpdate.time = DateTime.Now;
+            codigoUpdate.Estado = "Scaneado";
+            codigoUpdate.info = dispos != null ? dispos.Name + " - " + message.Type : message.Type;
+            _context.Entry(codigoUpdate).Property(x => x.time).IsModified = true;
+            _context.SaveChanges();
+
+            return new MessageSocket { Codigo = "Válido", Type = "Success" };
         }
 
         public MessageSocket VerificaSalida(string id, string idevent, MessageSocket message)

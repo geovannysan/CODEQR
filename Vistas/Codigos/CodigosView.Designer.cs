@@ -32,6 +32,7 @@
             dataGridView1 = new DataGridView();
             groupBox1 = new GroupBox();
             button2 = new Button();
+            progressBar1 = new ProgressBar();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             groupBox1.SuspendLayout();
             SuspendLayout();
@@ -78,16 +79,24 @@
             button2.UseVisualStyleBackColor = false;
             button2.Click += button2_Click;
             // 
-            // Codigos
+            // progressBar1
+            // 
+            progressBar1.Location = new Point(345, 520);
+            progressBar1.Name = "progressBar1";
+            progressBar1.Size = new Size(100, 23);
+            progressBar1.TabIndex = 4;
+            // 
+            // CodigosView
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(849, 524);
+            ClientSize = new Size(865, 563);
+            Controls.Add(progressBar1);
             Controls.Add(button2);
             Controls.Add(groupBox1);
             Controls.Add(button1);
             FormBorderStyle = FormBorderStyle.FixedSingle;
-            Name = "Codigos";
+            Name = "CodigosView";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Codigos";
             Load += Codigos_Load;
@@ -102,5 +111,6 @@
         private DataGridView dataGridView1;
         private GroupBox groupBox1;
         private Button button2;
+        private ProgressBar progressBar1;
     }
 }

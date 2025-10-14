@@ -1074,6 +1074,15 @@
           "buildTransitive/netcoreapp3.1/_._": {}
         }
       },
+      "System.Data.SQLite/2.0.2": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.1/System.Data.SQLite.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.1/System.Data.SQLite.dll": {}
+        }
+      },
       "System.Diagnostics.EventLog/5.0.0": {
         "type": "package",
         "dependencies": {
@@ -2350,6 +2359,15 @@
         },
         "build": {
           "buildTransitive/netcoreapp3.1/_._": {}
+        }
+      },
+      "System.Data.SQLite/2.0.2": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.1/System.Data.SQLite.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.1/System.Data.SQLite.dll": {}
         }
       },
       "System.Diagnostics.EventLog/5.0.0": {
@@ -4172,6 +4190,20 @@
         "useSharedDesignerContext.txt"
       ]
     },
+    "System.Data.SQLite/2.0.2": {
+      "sha512": "yAwxkraZf1PazyLg1sqMAlh4KEtaa2L8zieLicd9oWBybrb3SoPph+WVIyUTFWwtTVhNX/jNsDew6tbB8bw2xQ==",
+      "type": "package",
+      "path": "system.data.sqlite/2.0.2",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net471/System.Data.SQLite.dll",
+        "lib/netstandard2.0/System.Data.SQLite.dll",
+        "lib/netstandard2.1/System.Data.SQLite.dll",
+        "system.data.sqlite.2.0.2.nupkg.sha512",
+        "system.data.sqlite.nuspec"
+      ]
+    },
     "System.Diagnostics.EventLog/5.0.0": {
       "sha512": "FHkCwUfsTs+/5tsK+c0egLfacUgbhvcwi3wUFWSEEArSXao343mYqcpOVVFMlcCkdNtjU4YwAWaKYwal6f02og==",
       "type": "package",
@@ -4708,27 +4740,28 @@
       "Microsoft.EntityFrameworkCore.Tools >= 8.0.0",
       "Microsoft.NET.ILLink.Tasks >= 8.0.15",
       "QRCoder >= 1.6.0",
+      "System.Data.SQLite >= 2.0.2",
       "WindowsFirewallHelper >= 2.2.0.86"
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Pc-Tickets\\.nuget\\packages\\": {},
+    "C:\\Users\\kaku\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\NET\\NEWCODES\\NEWCODES\\NEWCODES.csproj",
+      "projectUniqueName": "C:\\Users\\kaku\\OneDrive\\Documents\\NEWCODES\\NEWCODES\\NEWCODES.csproj",
       "projectName": "NEWCODES",
-      "projectPath": "D:\\NET\\NEWCODES\\NEWCODES\\NEWCODES.csproj",
-      "packagesPath": "C:\\Users\\Pc-Tickets\\.nuget\\packages\\",
-      "outputPath": "D:\\NET\\NEWCODES\\NEWCODES\\obj\\publish\\win-x86\\",
+      "projectPath": "C:\\Users\\kaku\\OneDrive\\Documents\\NEWCODES\\NEWCODES\\NEWCODES.csproj",
+      "packagesPath": "C:\\Users\\kaku\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\kaku\\OneDrive\\Documents\\NEWCODES\\NEWCODES\\obj\\publish\\win-x86\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\Pc-Tickets\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\kaku\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -4754,8 +4787,7 @@
         "enableAudit": "true",
         "auditLevel": "low",
         "auditMode": "direct"
-      },
-      "SdkAnalysisLevel": "9.0.200"
+      }
     },
     "frameworks": {
       "net8.0-windows7.0": {
@@ -4803,6 +4835,10 @@
             "target": "Package",
             "version": "[1.6.0, )"
           },
+          "System.Data.SQLite": {
+            "target": "Package",
+            "version": "[2.0.2, )"
+          },
           "WindowsFirewallHelper": {
             "target": "Package",
             "version": "[2.2.0.86, )"
@@ -4841,7 +4877,7 @@
             "privateAssets": "none"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.203/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.408/PortableRuntimeIdentifierGraph.json"
       }
     },
     "runtimes": {

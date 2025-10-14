@@ -26,8 +26,16 @@ namespace NEWCODES.Vistas
 {
     public partial class EventosIDServer : MaterialSkin.Controls.MaterialForm
     {
+        public class Mensaje
+        {
+            public Dispositivos Client { get; set; }       // El dispositivo que envió el mensaje
+            public MessageSocket Data { get; set; }        // El mensaje que vino del WebSocket
+            public WebSocket WebSocket { get; set; }       // El socket al que se le enviará la respuesta
+        }
 
-        private readonly ConcurrentQueue<MessageSocket> _colaMensajes = new ConcurrentQueue<MessageSocket>();
+
+        private readonly ConcurrentQueue<Mensaje> _colaMensajes = new ConcurrentQueue<Mensaje>();
+
         private readonly SemaphoreSlim _signal = new SemaphoreSlim(0);
 
         private int _ID;
@@ -59,6 +67,7 @@ namespace NEWCODES.Vistas
 
             try
             {
+                Task.Run(ProcessQueueAsync);
                 if (datagridCliente.Columns["Accion"] == null)
                 {
                     DataGridViewButtonColumn btnEliminar = new DataGridViewButtonColumn();
@@ -90,6 +99,48 @@ namespace NEWCODES.Vistas
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message + "Erorr", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private async Task ProcessQueueAsync()
+        {
+            while (true)
+            {
+                await _signal.WaitAsync(); // espera hasta que haya mensajes
+
+                while (_colaMensajes.TryDequeue(out var msg))
+                {
+                    try
+                    {
+                        // Procesamos el mensaje
+                        var verifica = VerificaCodigo(msg.Client.Id.ToString(), msg.Data);
+
+                        var options = new JsonSerializerOptions
+                        {
+                            Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+                        };
+
+                        byte[] responseBuffer = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(verifica, options));
+
+                        // Enviar respuesta al WebSocket correcto
+                        if (msg.WebSocket.State == WebSocketState.Open)
+                        {
+                            await msg.WebSocket.SendAsync(
+                                new ArraySegment<byte>(responseBuffer),
+                                WebSocketMessageType.Text,
+                                true,
+                                CancellationToken.None
+                            );
+                        }
+
+                        // Opcional: actualizar UI si es necesario
+                        this.Invoke(new Action(() => Eventosinfo()));
+                    }
+                    catch (Exception ex)
+                    {
+                        AppendLog($"⚠️ Error procesando mensaje de {msg.Client.IDequipo}: {ex.Message}");
+                    }
+                }
             }
         }
 
@@ -482,7 +533,7 @@ namespace NEWCODES.Vistas
         /**
          * Escucha Mensaje del socket
          */
-        private async Task HandleWebSocketMessages(Dispositivos clientId, WebSocket webSocket)
+       /* private async Task HandleWebSocketMessages(Dispositivos clientId, WebSocket webSocket)
         {
             byte[] buffer = new byte[1024];
             WebSocketReceiveResult result = null;
@@ -580,6 +631,101 @@ namespace NEWCODES.Vistas
                 }
             }
         }
+        */
+        private async Task HandleWebSocketMessages(Dispositivos client, WebSocket webSocket)
+        {
+            byte[] buffer = new byte[4096];
+
+            try
+            {
+                while (webSocket.State == WebSocketState.Open)
+                {
+                    var result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
+
+                    if (result.MessageType == WebSocketMessageType.Text)
+                    {
+                        // 1️⃣ Obtener el mensaje recibido
+                        string messageText = Encoding.UTF8.GetString(buffer, 0, result.Count);
+                        var datosRecibidos = JsonSerializer.Deserialize<MessageSocket>(messageText);
+                        datosRecibidos.Type = client.IDequipo;
+
+                        AppendLog($"📩 Equipo [{client.IDequipo}] → Código entrante");
+
+                        // 2️⃣ Encolar el mensaje en la cola para que lo procese el worker
+                        _colaMensajes.Enqueue(new Mensaje
+                        {
+                            Client = client,
+                            Data = datosRecibidos,
+                            WebSocket = webSocket
+                        });
+
+                        _signal.Release(); // notifica al worker que hay un mensaje
+
+                        // ❌ NO proceses aquí la DB, lo hace el worker para evitar bloqueos
+                    }
+                    else if (result.MessageType == WebSocketMessageType.Close)
+                    {
+                        break; // salir del while
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                AppendLog($"⚠️ Error con cliente {client.IDequipo}: {ex.Message}");
+            }
+            finally
+            {
+                await CleanupClientAsync(client, webSocket);
+            }
+        }
+
+        private async Task CleanupClientAsync(Dispositivos client, WebSocket webSocket)
+        {
+            try
+            {
+                DispoditivosRepsoitory dispRepo = new DispoditivosRepsoitory();
+                var clienteDb = dispRepo.GetUnic(client.IDequipo, client.EventoID);
+
+                if (clienteDb != null)
+                {
+                    clienteDb.Estado = "Desconectado";
+                    dispRepo.Update(clienteDb);
+                }
+
+                // Cierra el socket si no está cerrado
+                if (webSocket.State != WebSocketState.Closed)
+                {
+                    await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Desconectado", CancellationToken.None);
+                }
+
+                // Elimina el WebSocket del diccionario de clientes
+                if (connectedClients.TryGetValue(client.IDequipo, out var sockets))
+                {
+                    sockets.Remove(webSocket);
+                    if (sockets.Count == 0)
+                        connectedClients.Remove(client.IDequipo);
+                }
+
+                // Refresca UI
+                var disp = dispRepo.Getlist(_ID); // obtén la lista actualizada de dispositivos
+                this.Invoke(new Action(() =>
+                {
+                    dataDispositi.Rows.Clear();
+                    foreach (var device in disp)
+                    {
+                        dataDispositi.Rows.Add(device.Id, device.Name, device.IDequipo, device.Estado);
+                    }
+                    CargarClientesEnGrid();
+                }));
+
+                AppendLog($"🔌 Cliente {client.IDequipo} desconectado.");
+            }
+            catch (Exception ex)
+            {
+                AppendLog($"⚠️ Error durante limpieza de {client.IDequipo}: {ex.Message}");
+            }
+        }
+
 
         private MessageSocket VerificaCodigo(string cliente, MessageSocket message)
         {

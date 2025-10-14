@@ -188,6 +188,7 @@ C:\Users\kaku\OneDrive\Documents\NEWCODES\NEWCODES\bin\Release\net8.0-windows\Sy
 C:\Users\kaku\OneDrive\Documents\NEWCODES\NEWCODES\bin\Release\net8.0-windows\System.Composition.Hosting.dll
 C:\Users\kaku\OneDrive\Documents\NEWCODES\NEWCODES\bin\Release\net8.0-windows\System.Composition.Runtime.dll
 C:\Users\kaku\OneDrive\Documents\NEWCODES\NEWCODES\bin\Release\net8.0-windows\System.Composition.TypedParts.dll
+C:\Users\kaku\OneDrive\Documents\NEWCODES\NEWCODES\bin\Release\net8.0-windows\System.Data.SQLite.dll
 C:\Users\kaku\OneDrive\Documents\NEWCODES\NEWCODES\bin\Release\net8.0-windows\System.IO.Packaging.dll
 C:\Users\kaku\OneDrive\Documents\NEWCODES\NEWCODES\bin\Release\net8.0-windows\System.IO.Pipelines.dll
 C:\Users\kaku\OneDrive\Documents\NEWCODES\NEWCODES\bin\Release\net8.0-windows\System.ServiceProcess.ServiceController.dll
@@ -270,6 +271,7 @@ C:\Users\kaku\OneDrive\Documents\NEWCODES\NEWCODES\obj\Release\net8.0-windows\NE
 C:\Users\kaku\OneDrive\Documents\NEWCODES\NEWCODES\obj\Release\net8.0-windows\NEWCODES.Properties.Resources.resources
 C:\Users\kaku\OneDrive\Documents\NEWCODES\NEWCODES\obj\Release\net8.0-windows\NEWCODES.Vistas.Codigos.CodigosView.resources
 C:\Users\kaku\OneDrive\Documents\NEWCODES\NEWCODES\obj\Release\net8.0-windows\NEWCODES.Vistas.Codigos.Qrcode.resources
+C:\Users\kaku\OneDrive\Documents\NEWCODES\NEWCODES\obj\Release\net8.0-windows\NEWCODES.Vistas.Comand.resources
 C:\Users\kaku\OneDrive\Documents\NEWCODES\NEWCODES\obj\Release\net8.0-windows\NEWCODES.Vistas.Componetes.FormAprobacion.resources
 C:\Users\kaku\OneDrive\Documents\NEWCODES\NEWCODES\obj\Release\net8.0-windows\NEWCODES.Vistas.Despositivo.DIspositivosF.resources
 C:\Users\kaku\OneDrive\Documents\NEWCODES\NEWCODES\obj\Release\net8.0-windows\NEWCODES.Vistas.Eventosform.resources
@@ -286,5 +288,3 @@ C:\Users\kaku\OneDrive\Documents\NEWCODES\NEWCODES\obj\Release\net8.0-windows\re
 C:\Users\kaku\OneDrive\Documents\NEWCODES\NEWCODES\obj\Release\net8.0-windows\NEWCODES.pdb
 C:\Users\kaku\OneDrive\Documents\NEWCODES\NEWCODES\obj\Release\net8.0-windows\NEWCODES.genruntimeconfig.cache
 C:\Users\kaku\OneDrive\Documents\NEWCODES\NEWCODES\obj\Release\net8.0-windows\ref\NEWCODES.dll
-C:\Users\kaku\OneDrive\Documents\NEWCODES\NEWCODES\bin\Release\net8.0-windows\System.Data.SQLite.dll
-C:\Users\kaku\OneDrive\Documents\NEWCODES\NEWCODES\obj\Release\net8.0-windows\NEWCODES.Vistas.Comand.resources

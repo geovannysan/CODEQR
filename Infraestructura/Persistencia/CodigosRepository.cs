@@ -100,7 +100,7 @@ namespace NEWCODES.Infraestructura.Persistencia
             if (codigoId == 0)
             {
                 // Insertar código rechazado
-                using var insertCmd = db.CreateCommand(@"
+              /*  using var insertCmd = db.CreateCommand(@"
             INSERT INTO Codigos (Name, Codigo, EventoID, Estado, info, time, Conteo, Asiento)
             VALUES ('Adicional', @codigo, @eventoId, 'Rechazado', @info, @time, 0, @asiento)");
                 insertCmd.Parameters.AddWithValue("@codigo", message.Codigo);
@@ -108,15 +108,16 @@ namespace NEWCODES.Infraestructura.Persistencia
                 insertCmd.Parameters.AddWithValue("@info", dispositivoName != null ? dispositivoName + " - " + message.Type : message.Type);
                 insertCmd.Parameters.AddWithValue("@time", DateTime.Now);
                 insertCmd.Parameters.AddWithValue("@asiento", message.Codigo);
-                insertCmd.ExecuteNonQuery();
+                insertCmd.ExecuteNonQuery();*/
 
                 // Insertar log
                 using var logCmd = db.CreateCommand(@"
             INSERT INTO LogsEventos (Codigo, Estado, Mensaje, Tipo, time, IdEvento)
-            VALUES (@codigo, 'Esca', @mensaje, 'Codigo', @time, @eventoId)");
+            VALUES (@codigo, 'Rechazado', @mensaje, 'Codigo', @time, @eventoId)");
                 logCmd.Parameters.AddWithValue("@codigo", message.Codigo);
                 logCmd.Parameters.AddWithValue("@mensaje", $"Código {message.Codigo} no encontrado");
                 logCmd.Parameters.AddWithValue("@time", DateTime.Now);
+
                 logCmd.Parameters.AddWithValue("@eventoId", eventoIdInt);
                 logCmd.ExecuteNonQuery();
 

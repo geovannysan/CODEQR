@@ -88,7 +88,7 @@ namespace NEWCODES
 
         }
 
-      
+
         // Esto puede ir como campo en Form0 o donde llames a los formularios
         private Dictionary<int, EventosIDServer> formulariosAbiertos = new Dictionary<int, EventosIDServer>();
 
@@ -269,6 +269,12 @@ namespace NEWCODES
                     // Abrí un formulario para editar o lo que necesites
                 }
             }
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            Comand comand = new Comand();
+            comand.Show();
         }
     }
 }

@@ -9,6 +9,7 @@ using NEWCODES.Infraestructura.Utils;
 using NEWCODES.Vistas.Codigos;
 using NEWCODES.Vistas.Componetes;
 using NEWCODES.Vistas.Despositivo;
+using System.Collections.Concurrent;
 using System.Data;
 using System.Diagnostics;
 using System.Net;
@@ -25,6 +26,10 @@ namespace NEWCODES.Vistas
 {
     public partial class EventosIDServer : MaterialSkin.Controls.MaterialForm
     {
+
+        private readonly ConcurrentQueue<MessageSocket> _colaMensajes = new ConcurrentQueue<MessageSocket>();
+        private readonly SemaphoreSlim _signal = new SemaphoreSlim(0);
+
         private int _ID;
         private HttpListener httpListener;
         private Thread listenerThread;
@@ -281,6 +286,9 @@ namespace NEWCODES.Vistas
                             EventoID = dispo.EventoID,
                         });
 
+                     
+
+                        _ = Task.Run(() => HandleWebSocketMessages(consulta, webSocket));
                         var disp = dispoditivos.Getlist(_ID);
                         this.Invoke(new Action(() =>
                         {
@@ -289,8 +297,6 @@ namespace NEWCODES.Vistas
                             //    dataDispositi.Rows.Add(device.Id, device.Name, device.IDequipo, device.Estado);
                             CargarClientesEnGrid();
                         }));
-
-                        _ = Task.Run(() => HandleWebSocketMessages(consulta, webSocket));
                     }
                     else
                     {

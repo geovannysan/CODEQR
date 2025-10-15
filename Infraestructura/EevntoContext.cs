@@ -60,6 +60,11 @@ namespace NEWCODES.Infraestructura
                 .WithMany()
                 .HasForeignKey(d => d.IdEvento)
                 .OnDelete(DeleteBehavior.Cascade);
-                }
+            modelBuilder.Entity<Codigos>()
+          .HasIndex(c => new { c.Codigo, c.EventoID })
+          .IsUnique();
+
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }

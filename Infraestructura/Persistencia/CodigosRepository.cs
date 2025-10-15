@@ -17,6 +17,44 @@ namespace NEWCODES.Infraestructura.Persistencia
             throw new NotImplementedException();
         }
 
+
+        public async Task InsertBatchAsync(IEnumerable<Codigos> nuevosCodigos)
+        {
+            // 🔹 Extrae las combinaciones únicas que ya existen
+            var eventoIds = nuevosCodigos.Select(c => c.EventoID).Distinct().ToList();
+            var codigosExistentes = await _context.Codigos
+                .Where(c => eventoIds.Contains(c.EventoID))
+                .Select(c => new { c.Codigo, c.EventoID })
+                .ToListAsync();
+
+            var existentesSet = new HashSet<(string Codigo, int EventoID)>(
+                codigosExistentes.Select(c => (c.Codigo, c.EventoID))
+            );
+
+            // 🔹 Filtra solo los nuevos
+            var nuevosUnicos = nuevosCodigos
+                .Where(c => !existentesSet.Contains((c.Codigo, c.EventoID)))
+                .ToList();
+
+            if (nuevosUnicos.Count == 0)
+                return;
+
+            const int batchSize = 1000;
+            for (int i = 0; i < nuevosUnicos.Count; i += batchSize)
+            {
+                var lote = nuevosUnicos.Skip(i).Take(batchSize);
+                await _context.Codigos.AddRangeAsync(lote);
+                await _context.SaveChangesAsync();
+            }
+        }
+        public async Task<List<Codigos>> GetListAsync(int eventoId)
+        {
+            return await _context.Codigos
+                .Where(c => c.EventoID == eventoId)
+                .ToListAsync();
+        }
+
+
         public Codigos Get(string id)
         {
             return _context.Set<Codigos>().AsNoTracking().FirstOrDefault(x => x.EventoID.Equals(Convert.ToInt32(id)));

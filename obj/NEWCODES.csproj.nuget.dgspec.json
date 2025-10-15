@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\kaku\\OneDrive\\Documents\\NEWCODES\\NEWCODES\\NEWCODES.csproj": {}
+    "D:\\NET\\NEWCODES\\NEWCODES\\NEWCODES.csproj": {}
   },
   "projects": {
-    "C:\\Users\\kaku\\OneDrive\\Documents\\NEWCODES\\NEWCODES\\NEWCODES.csproj": {
+    "D:\\NET\\NEWCODES\\NEWCODES\\NEWCODES.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\kaku\\OneDrive\\Documents\\NEWCODES\\NEWCODES\\NEWCODES.csproj",
+        "projectUniqueName": "D:\\NET\\NEWCODES\\NEWCODES\\NEWCODES.csproj",
         "projectName": "NEWCODES",
-        "projectPath": "C:\\Users\\kaku\\OneDrive\\Documents\\NEWCODES\\NEWCODES\\NEWCODES.csproj",
-        "packagesPath": "C:\\Users\\kaku\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\kaku\\OneDrive\\Documents\\NEWCODES\\NEWCODES\\obj\\",
+        "projectPath": "D:\\NET\\NEWCODES\\NEWCODES\\NEWCODES.csproj",
+        "packagesPath": "C:\\Users\\Pc-Tickets\\.nuget\\packages\\",
+        "outputPath": "D:\\NET\\NEWCODES\\NEWCODES\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\kaku\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Pc-Tickets\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -43,7 +43,8 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        }
+        },
+        "SdkAnalysisLevel": "9.0.200"
       },
       "frameworks": {
         "net8.0-windows7.0": {
@@ -113,7 +114,7 @@
               "privateAssets": "none"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.408/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.203/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("NEWCODES")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+cf798ea186af773795e72ed0a59e256f27afed9b")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+bd8b21b97bd28811380464222fa7f9c81050aaac")]
 [assembly: System.Reflection.AssemblyProductAttribute("NEWCODES")]
 [assembly: System.Reflection.AssemblyTitleAttribute("NEWCODES")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

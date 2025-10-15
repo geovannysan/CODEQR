@@ -288,3 +288,5 @@ C:\Users\kaku\OneDrive\Documents\NEWCODES\NEWCODES\obj\Release\net8.0-windows\re
 C:\Users\kaku\OneDrive\Documents\NEWCODES\NEWCODES\obj\Release\net8.0-windows\NEWCODES.pdb
 C:\Users\kaku\OneDrive\Documents\NEWCODES\NEWCODES\obj\Release\net8.0-windows\NEWCODES.genruntimeconfig.cache
 C:\Users\kaku\OneDrive\Documents\NEWCODES\NEWCODES\obj\Release\net8.0-windows\ref\NEWCODES.dll
+D:\NET\NEWCODES\NEWCODES\bin\Release\net8.0-windows\System.Data.SQLite.dll
+D:\NET\NEWCODES\NEWCODES\obj\Release\net8.0-windows\NEWCODES.Vistas.Comand.resources

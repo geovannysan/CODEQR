@@ -101,49 +101,70 @@ namespace NEWCODES.Vistas.Codigos
 
         private EventosIDServer form1Instance;
         //private Form2 form2Instance;
-        private void button2_Click(object sender, EventArgs e)
+        private async void button2_Click(object sender, EventArgs e)
         {
-            var datos = dataGridView1.Rows;
-            CodigosRepository repo = new CodigosRepository();
-
-            foreach (DataGridViewRow row in datos)
+            try
             {
-                // Evita filas nuevas vacías
-                if (row.IsNewRow) continue;
-
-                var info = new Entity.Codigos
+                if (dataGridView1.Rows.Count == 0)
                 {
-                    Name = row.Cells.Count > 1 ? row.Cells[1].Value?.ToString() ?? "" : "",
-                    Codigo = row.Cells.Count > 0 ? row.Cells[0].Value?.ToString() ?? "" : "",
-                    Asiento = row.Cells.Count > 2 ? row.Cells[2].Value?.ToString() ?? "" : "",
-                    info = row.Cells.Count > 3 ? row.Cells[3].Value?.ToString() ?? "" : "",
-                    EventoID = _ID
-                };
+                    MessageBox.Show("No hay datos en la tabla.");
+                    return;
+                }
 
-                repo.Insert(info,0);
-            }
-                var lista = repo.GetList(Convert.ToString(_ID)).ToList();
-         
-            if (lista.Count== 0) {
+                CodigosRepository repo = new CodigosRepository();
+                var nuevosCodigos = new List<Entity.Codigos>();
+
+                foreach (DataGridViewRow row in dataGridView1.Rows)
+                {
+                    if (row.IsNewRow) continue;
+
+                    string codigo = row.Cells.Count > 0 ? row.Cells[0].Value?.ToString()?.Trim() ?? "" : "";
+                    string name = row.Cells.Count > 1 ? row.Cells[1].Value?.ToString()?.Trim() ?? "" : "";
+                    string asiento = row.Cells.Count > 2 ? row.Cells[2].Value?.ToString()?.Trim() ?? "" : "";
+                    string info = row.Cells.Count > 3 ? row.Cells[3].Value?.ToString()?.Trim() ?? "" : "";
+
+                    if (string.IsNullOrWhiteSpace(codigo))
+                        continue;
+
+                    nuevosCodigos.Add(new Entity.Codigos
+                    {
+                        Codigo = codigo,
+                        Name = name,
+                        Asiento = asiento,
+                        info = info,
+                        EventoID = _ID,
+                        time = DateTime.Now
+                    });
+                }
+
+                if (nuevosCodigos.Count == 0)
+                {
+                    MessageBox.Show("No hay códigos válidos para insertar.");
+                    return;
+                }
+
+                // 🔹 Insertar por lotes, evitando duplicados
+                await repo.InsertBatchAsync(nuevosCodigos);
+
+                // 🔹 Ver cuántos quedaron finalmente en la base
+                var lista = await repo.GetListAsync(_ID);
+                MessageBox.Show($"✅ Total de códigos en el evento: {lista.Count}");
+
+                // 🔹 Mostrar o actualizar ventana de evento
+                bool formAbierto = Application.OpenForms.OfType<EventosIDServer>().Any();
+                if (!formAbierto)
+                {
+                    EventosIDServer eventosIDServer = new EventosIDServer(_ID);
+                    eventosIDServer.Show();
+                }
+
                 this.Close();
-                return;
             }
-            MessageBox.Show($"Total {lista.Count()} códigos para el evento");
-            bool form1Abierto = Application.OpenForms.OfType<EventosIDServer>().Any();
-            if (!form1Abierto)
+            catch (Exception ex)
             {
-                EventosIDServer eventosIDServer = new EventosIDServer(_ID);
-                eventosIDServer.Show();
-                this.Close();
-                return ;
+                MessageBox.Show("❌ Error al insertar: " + ex.Message);
             }
-            else
-            {
-               // form1Instance.BringToFront();
-                //form1Instance.Focus();
-                this.Close();
-            }
-            
+
         }
 
         private void Codigos_Load(object sender, EventArgs e)

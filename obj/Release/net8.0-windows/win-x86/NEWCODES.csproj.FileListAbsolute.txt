@@ -1174,3 +1174,5 @@ C:\Users\kaku\OneDrive\Documents\NEWCODES\NEWCODES\obj\Release\net8.0-windows\wi
 C:\Users\kaku\OneDrive\Documents\NEWCODES\NEWCODES\obj\Release\net8.0-windows\win-x86\NEWCODES.application
 C:\Users\kaku\OneDrive\Documents\NEWCODES\NEWCODES\obj\Release\net8.0-windows\win-x86\NEWCODES.csproj.Up2Date
 C:\Users\kaku\OneDrive\Documents\NEWCODES\NEWCODES\obj\Release\net8.0-windows\win-x86\ref\NEWCODES.dll
+D:\NET\NEWCODES\NEWCODES\bin\Release\net8.0-windows\win-x86\System.Data.SQLite.dll
+D:\NET\NEWCODES\NEWCODES\obj\Release\net8.0-windows\win-x86\NEWCODES.Vistas.Comand.resources

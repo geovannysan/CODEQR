@@ -20,7 +20,6 @@ namespace NEWCODES.Infraestructura.Persistencia
 
         public async Task InsertBatchAsync(IEnumerable<Codigos> nuevosCodigos)
         {
-            // 🔹 Extrae las combinaciones únicas que ya existen
             var eventoIds = nuevosCodigos.Select(c => c.EventoID).Distinct().ToList();
             var codigosExistentes = await _context.Codigos
                 .Where(c => eventoIds.Contains(c.EventoID))
@@ -31,7 +30,6 @@ namespace NEWCODES.Infraestructura.Persistencia
                 codigosExistentes.Select(c => (c.Codigo, c.EventoID))
             );
 
-            // 🔹 Filtra solo los nuevos
             var nuevosUnicos = nuevosCodigos
                 .Where(c => !existentesSet.Contains((c.Codigo, c.EventoID)))
                 .ToList();
@@ -104,8 +102,6 @@ namespace NEWCODES.Infraestructura.Persistencia
                 return new MessageSocket { Codigo = "ID de dispositivo inválido", Type = "Error" };
 
             var db = new AdoContext();
-
-            // Buscar código
             using var cmd = db.CreateCommand(@"
         SELECT Id, Codigo, Name, Asiento, Estado, EventoID, time, info 
         FROM Codigos 
@@ -178,8 +174,6 @@ namespace NEWCODES.Infraestructura.Persistencia
 
                 return new MessageSocket { Codigo = $"Código escaneado anteriormente - {formateado}", Type = "Error" };
             }
-
-            // Actualizar código como escaneado
             using var updateCmd = db.CreateCommand(@"
         UPDATE Codigos 
         SET Estado='Scaneado', time=@time, info=@info
